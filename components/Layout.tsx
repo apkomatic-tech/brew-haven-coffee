@@ -1,11 +1,7 @@
 import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
-import { HiArrowNarrowRight as ArrowRightIcon, HiMenu as MenuIcon } from 'react-icons/hi';
 
-import Logo from '../public/logo.svg';
-import Cup from '../public/cup-outlined.svg';
+import React from 'react';
+import NavBar from './NavBar';
 
 type LayoutProps = {
   title?: string;
@@ -21,42 +17,9 @@ const Layout = ({ title, children }: LayoutProps) => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className='page'>
-        <div className='container mx-auto max-w-7xl'>
-          <header className='flex justify-between p-4 items-center'>
-            <Link href='/' passHref>
-              <a>
-                <h1 className='font-bold text-2xl flex items-center text-primary'>
-                  <Image src={Logo} alt='Doge Coffee' />
-                  <span className='inline-block ml-4'>Doge Coffee</span>
-                </h1>
-              </a>
-            </Link>
-            <nav className='hidden sm:grid grid-flow-col-dense gap-4 text-gray-700 font-bold items-center'>
-              <Link href='/'>
-                <a className='hover:text-primary'>Home</a>
-              </Link>
-              <Link href='/about'>
-                <a className='hover:text-primary'>About</a>
-              </Link>
-              <Link href='/order'>
-                <a className='bg-secondary text-black py-2 px-4 ml-6 flex items-center hover:opacity-80 duration-200'>
-                  <span className='inline-block mr-2'>Order</span> <Image src={Cup} alt='' width={30} height={30} />
-                </a>
-              </Link>
-            </nav>
-            <div className='flex sm:hidden grid-flow-col-dense gap-4 text-gray-700 font-bold items-center'>
-              <Link href='/order'>
-                <a className='bg-secondary text-black py-2 px-4 ml-6 flex items-center hover:opacity-80 duration-200'>
-                  <span className='inline-block mr-2'>Order</span> <Image src={Cup} alt='' width={30} height={30} />
-                </a>
-              </Link>
-              <button type='button' className='text-2xl'>
-                <MenuIcon />
-              </button>
-            </div>
-          </header>
-        </div>
-
+        <header className='container mx-auto max-w-full lg:max-w-7xl'>
+          <NavBar />
+        </header>
         <main>{children}</main>
       </div>
     </>
