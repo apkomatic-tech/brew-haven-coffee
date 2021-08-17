@@ -1,14 +1,17 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiMenu as MenuIcon, HiOutlineShoppingCart as ShoppingCartIcon, HiOutlineUser as UserIcon } from 'react-icons/hi';
+import { useState } from 'react';
+import { useRouter } from 'next/dist/client/router';
+import { AnimatePresence, motion } from 'framer-motion';
+import { HiMenu as MenuIcon, HiX as CloseMenuIcon } from 'react-icons/hi';
 
 import Logo from '../public/logo.svg';
 import Cup from '../public/cup-outlined.svg';
 import HeaderCartLogin from './HeaderCartLogin';
-import { useState } from 'react';
 
 function NavBar() {
+  const { pathname } = useRouter();
   const [showMobileNav, setShowMobileNav] = useState(false);
   return (
     <div className='flex p-4 items-center'>
@@ -51,6 +54,70 @@ function NavBar() {
           </button>
         </nav>
       </div>
+      <AnimatePresence>
+        {showMobileNav && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.25
+              }}
+              className='bg-primarydark pt-20 text-lg font-bold fixed h-full top-0 right-0 shadow-lg drop-shadow-lg text-white'
+              style={{ width: '50vw' }}>
+              <nav className='relative z-10'>
+                <button
+                  type='button'
+                  className='leading-none text-4xl absolute'
+                  style={{
+                    top: '-55px',
+                    right: '20px'
+                  }}
+                  onClick={() => setShowMobileNav(false)}>
+                  <CloseMenuIcon />
+                </button>
+                <Link href='/'>
+                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/' ? 'bg-primary' : ''}`}>
+                    Home
+                  </a>
+                </Link>
+                <Link href='/menu'>
+                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/menu' ? 'bg-primary' : ''}`}>
+                    Menu
+                  </a>
+                </Link>
+                <Link href='/order'>
+                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/order' ? 'bg-primary' : ''}`}>
+                    Order
+                  </a>
+                </Link>
+                <Link href='/login'>
+                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/login' ? 'bg-primary' : ''}`}>
+                    Account
+                  </a>
+                </Link>
+                <Link href='/about'>
+                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/about' ? 'bg-primary' : ''}`}>
+                    About
+                  </a>
+                </Link>
+              </nav>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.25
+              }}
+              className='fixed h-full top-0 left-0'
+              style={{ width: '50vw', backgroundColor: 'rgba(0,0,0,.5)' }}
+              onClick={() => setShowMobileNav(false)}
+            />
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
