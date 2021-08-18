@@ -17,9 +17,9 @@ function NavBar() {
     <div className='flex p-4 items-center'>
       <Link href='/' passHref>
         <a className='mr-auto'>
-          <h1 className='font-bold text-2xl flex items-center text-primary'>
+          <h1 className='font-bold text-xl md:text-2xl flex items-center text-primary'>
             <Image src={Logo} alt='Doge Coffee' />
-            <span className='inline-block ml-4'>Doge Coffee</span>
+            <span className='hidden sm:inline-block ml-4'>Doge Coffee</span>
           </h1>
         </a>
       </Link>
@@ -64,7 +64,7 @@ function NavBar() {
               transition={{
                 duration: 0.25
               }}
-              className='bg-primarydark pt-20 text-lg font-bold fixed h-full top-0 right-0 shadow-lg drop-shadow-lg text-white'
+              className='bg-primarydark pt-20 text-lg font-bold fixed h-full top-0 right-0 shadow-lg drop-shadow-lg text-white z-20'
               style={{ width: '50vw' }}>
               <nav className='relative z-10'>
                 <button
@@ -78,27 +78,37 @@ function NavBar() {
                   <CloseMenuIcon />
                 </button>
                 <Link href='/'>
-                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/' ? 'bg-primary' : ''}`}>
+                  <a
+                    onClick={() => setShowMobileNav(false)}
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/' ? 'bg-primary' : ''}`}>
                     Home
                   </a>
                 </Link>
                 <Link href='/menu'>
-                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/menu' ? 'bg-primary' : ''}`}>
+                  <a
+                    onClick={() => setShowMobileNav(false)}
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/menu' ? 'bg-primary' : ''}`}>
                     Menu
                   </a>
                 </Link>
                 <Link href='/order'>
-                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/order' ? 'bg-primary' : ''}`}>
+                  <a
+                    onClick={() => setShowMobileNav(false)}
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/order' ? 'bg-primary' : ''}`}>
                     Order
                   </a>
                 </Link>
                 <Link href='/login'>
-                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/login' ? 'bg-primary' : ''}`}>
+                  <a
+                    onClick={() => setShowMobileNav(false)}
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/login' ? 'bg-primary' : ''}`}>
                     Account
                   </a>
                 </Link>
                 <Link href='/about'>
-                  <a onClick={() => setShowMobileNav(false)} className={`text-center block px-1 py-4 ${pathname === '/about' ? 'bg-primary' : ''}`}>
+                  <a
+                    onClick={() => setShowMobileNav(false)}
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/about' ? 'bg-primary' : ''}`}>
                     About
                   </a>
                 </Link>
@@ -111,8 +121,8 @@ function NavBar() {
               transition={{
                 duration: 0.25
               }}
-              className='fixed h-full top-0 left-0'
-              style={{ width: '50vw', backgroundColor: 'rgba(0,0,0,.5)' }}
+              className='fixed w-full h-full top-0 left-0 z-10'
+              style={{ backgroundColor: 'rgba(0,0,0,.5)' }}
               onClick={() => setShowMobileNav(false)}
             />
           </>

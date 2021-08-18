@@ -9,9 +9,9 @@ import Wave from '../public/wave.svg';
 const Home: NextPage = () => {
   return (
     <>
-      <div className='pt-32 pb-18 px-8'>
+      <div className='pt-12 pb-18 px-8 md:pt-32'>
         <div className='container mx-auto max-w-full lg:max-w-7xl'>
-          <div className='flex'>
+          <div className='flex relative'>
             <div>
               <h1 className='text-4xl font-bold mb-12'>
                 Start your day <br /> with a delicious cup of Doge coffee.
@@ -20,7 +20,7 @@ const Home: NextPage = () => {
                 <a className='py-4 px-12 font-bold rounded-md bg-primary text-white'>See Our Menu</a>
               </Link>
             </div>
-            <div className='hidden ml-14 max-w-md md:max-w-lg md:block transform -translate-y-28'>
+            <div className='hidden transform sm:block sm:w-72 sm:h-72 sm:ml-14 md:w-auto md:h-auto md:max-w-lg md:block md:static md:-translate-y-28'>
               <Image src={HeroImage} alt='' width={500} height={500} />
             </div>
           </div>
