@@ -33,7 +33,7 @@ function NavBar() {
             <a className='hover:text-primary'>About</a>
           </Link>
           <Link href='/menu'>
-            <a className='bg-secondary text-black py-1 px-4 flex leading-none items-center hover:opacity-80 duration-200'>
+            <a className='bg-secondary text-black py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200'>
               <span className='inline-block mr-2'>Menu</span> <Image src={Cup} alt='' width={30} height={30} />
             </a>
           </Link>

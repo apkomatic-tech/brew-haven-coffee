@@ -11,7 +11,15 @@ function HeaderCartLogin() {
         </a>
       </Link>
       <Link href='/order'>
-        <a>
+        <a className='relative'>
+          <span
+            className='absolute cart-count-badge text-sm w-5 h-5 bg-primarydark text-white text-center leading-none rounded-full p-1'
+            style={{
+              top: '-.4rem',
+              right: '-.4rem'
+            }}>
+            1
+          </span>
           <ShoppingCartIcon />
         </a>
       </Link>
