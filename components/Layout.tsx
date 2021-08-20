@@ -27,7 +27,7 @@ const Layout = ({ title, children }: LayoutProps) => {
         </header>
         <main>{children}</main>
         <footer className='my-10'>
-          <div className='container mx-auto max-w-full lg:max-w-7xl'>
+          <div className='container mx-auto max-w-full px-4 lg:max-w-7xl'>
             <div className='flex mb-4'>
               <a href='#' className='mr-3'>
                 <Image src={FacebookIcon} width={35} height={35} alt='' />

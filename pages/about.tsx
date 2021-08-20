@@ -2,17 +2,18 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import Container from '../components/Container';
 import Blob from '../public/yellow-blob.svg';
 
 const About: NextPage = () => {
   return (
     <>
-      <div className='mt-24 mb-16 container px-4 mx-auto max-w-full lg:max-w-7xl'>
+      <Container>
         <h1 className='relative text-2xl font-bold mb-24 z-10'>
           About Doge Coffee
           <div className='bg-primary mt-1 h-1 w-16 rounded-sm'></div>
           <div
-            className='absolute transform -translate-y-12 -translate-x-4 top-0 left-0 w-26 h-26'
+            className='absolute transform -translate-y-10 -translate-x-2 top-0 left-0 w-25 h-25'
             style={{
               zIndex: -1
             }}>
@@ -39,7 +40,7 @@ const About: NextPage = () => {
           man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure? On the other hand, we denounce with
           righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire.
         </p>
-      </div>
+      </Container>
     </>
   );
 };
