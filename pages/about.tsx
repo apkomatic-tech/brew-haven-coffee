@@ -8,7 +8,7 @@ import Blob from '../public/yellow-blob.svg';
 const About: NextPage = () => {
   return (
     <>
-      <Container>
+      <div className='mt-24 mb-16 container px-4 mx-auto max-w-full lg:max-w-3xl'>
         <h1 className='relative text-2xl font-bold mb-24 z-10'>
           About Doge Coffee
           <div className='bg-primary mt-1 h-1 w-16 rounded-sm'></div>
@@ -40,7 +40,7 @@ const About: NextPage = () => {
           man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure? On the other hand, we denounce with
           righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire.
         </p>
-      </Container>
+      </div>
     </>
   );
 };
