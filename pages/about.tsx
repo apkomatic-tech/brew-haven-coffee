@@ -2,14 +2,13 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import Container from '../components/Container';
 import Blob from '../public/yellow-blob.svg';
 
 const About: NextPage = () => {
   return (
     <>
-      <div className='mt-24 mb-16 container px-4 mx-auto max-w-full lg:max-w-3xl'>
-        <h1 className='relative text-2xl font-bold mb-24 z-10'>
+      <div className='page-content wrapper-narrow'>
+        <h1 className='page-title mb-24 relative z-10'>
           About Doge Coffee
           <div className='bg-primary mt-1 h-1 w-16 rounded-sm'></div>
           <div

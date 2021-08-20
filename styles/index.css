@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.page-content {
+  @apply mt-20 mb-16;
+}
+.wrapper {
+  @apply container px-4 mx-auto max-w-full lg:max-w-7xl;
+}
+.wrapper-narrow {
+  @apply container px-4 mx-auto max-w-full lg:max-w-3xl;
+}
+
+.page-title {
+  @apply text-2xl font-bold mb-16;
+}
