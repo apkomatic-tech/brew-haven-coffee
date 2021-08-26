@@ -34,5 +34,5 @@ yarn-error.log*
 .vercel
 
 
-# cms
-/cms/node_modules
+# sanity
+/studio/node_modules
