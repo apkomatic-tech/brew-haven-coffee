@@ -1085,7 +1085,7 @@
   "resolved" "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.0.6.tgz"
   "version" "1.0.6"
 
-"@sanity/client@^2.16.0":
+"@sanity/client@^2.11.0", "@sanity/client@^2.16.0":
   "integrity" "sha512-tc4iuPL3NBBys6rJAL1+C2YnPfEOzscR1M/SgJ81V12QxMUqWa6b8WxYC18NCQTAXCLtkzlsoLUz3zCqnhPwPQ=="
   "resolved" "https://registry.npmjs.org/@sanity/client/-/client-2.16.0.tgz"
   "version" "2.16.0"
@@ -1110,6 +1110,11 @@
   "integrity" "sha512-a28hvBov4t52a96gsRAv12ifhAjAu20KE+HHq2+bWAtbFXIwVI+Y0alDlkVsx7/5GfJPte8xuFaxFYQz2Zquaw=="
   "resolved" "https://registry.npmjs.org/@sanity/generate-help-url/-/generate-help-url-2.15.0.tgz"
   "version" "2.15.0"
+
+"@sanity/image-url@^0.140.22":
+  "integrity" "sha512-CAmQZnj+KM7FSEYiWlIGDit072syicYuAw0w7R2ctMzHiZ4p9mE/g6dBnYqrqFUrw2J+GpJgPt+RVspKP8vdqA=="
+  "resolved" "https://registry.npmjs.org/@sanity/image-url/-/image-url-0.140.22.tgz"
+  "version" "0.140.22"
 
 "@sanity/observable@2.0.9":
   "integrity" "sha512-IUpzsEbhOhofTBUu2tiQ4Ymbkmhr6oe4UC4Ds1khZ9Td4t4mzzPGmGQIr5SBEDawz0UD7ZgZAb4LeEzV3hUrtA=="
@@ -2936,6 +2941,11 @@
   "resolved" "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.8.tgz"
   "version" "4.2.8"
 
+"groq@^2.15.0":
+  "integrity" "sha512-V3VLBLftaEylbeXDwb2VoGa87SFLGLbU9h6Lz7vuZK+wcs4Kk92qG3A8nWtsdCp63hYKft0/AaXuanbkch0GeA=="
+  "resolved" "https://registry.npmjs.org/groq/-/groq-2.15.0.tgz"
+  "version" "2.15.0"
+
 "has-bigints@^1.0.1":
   "integrity" "sha512-LSBS2LjbNBTf6287JEbEzvJgftkF5qFkmCo9hDRpAzKhUOlJ+hx8dd4USs00SgsUNwc4617J9ki5YtEClM2ffA=="
   "resolved" "https://registry.npmjs.org/has-bigints/-/has-bigints-1.0.1.tgz"
@@ -3661,7 +3671,14 @@
   "resolved" "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   "version" "1.4.0"
 
-"next@>=10.2.0", "next@11.1.0":
+"next-sanity-image@^3.1.5":
+  "integrity" "sha512-0WjBW5ahHA3jSq5VO7Rsda62/DkoX9GREkkT/cwIdYIsaWI+c55xth10lDvllP8Z3kfqLp7B5Fb0vITMS/CE7w=="
+  "resolved" "https://registry.npmjs.org/next-sanity-image/-/next-sanity-image-3.1.5.tgz"
+  "version" "3.1.5"
+  dependencies:
+    "@sanity/image-url" "^0.140.22"
+
+"next@^11.0.0", "next@>=10.2.0", "next@11.1.0":
   "integrity" "sha512-GHBk/c7Wyr6YbFRFZF37I0X7HKzkHHI8pur/loyXo5AIE8wdkbGPGO0ds3vNAO6f8AxZAKGCRYtAzoGlVLoifA=="
   "resolved" "https://registry.npmjs.org/next/-/next-11.1.0.tgz"
   "version" "11.1.0"
