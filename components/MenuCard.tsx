@@ -14,9 +14,7 @@ type MenuCardProps = {
 
 function MenuCard({ image, title, slug, price }: MenuCardProps) {
   const imageProps = useNextSanityImage(client, image, {
-    blurUpImageWidth: 124,
-    blurUpImageQuality: 40,
-    blurUpAmount: 24
+    enableBlurUp: true
   });
   return (
     <Link href={`/menu/${slug}`}>

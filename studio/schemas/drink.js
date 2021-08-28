@@ -13,6 +13,12 @@ const drinkSchema = {
       validation: (Rule) => Rule.required().min(0).max(100)
     },
     {
+      name: 'description',
+      title: 'Drink Description',
+      type: 'text',
+      validation: (Rule) => Rule.max(2000)
+    },
+    {
       name: 'slug',
       title: 'Drink URL',
       type: 'slug',
