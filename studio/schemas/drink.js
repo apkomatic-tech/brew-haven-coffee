@@ -1,9 +1,10 @@
+import { GiCoffeeMug } from 'react-icons/gi';
+
 const drinkSchema = {
   title: 'Drink',
   name: 'drink',
   type: 'document',
-  // TODO: add icon:
-  // icon: '',
+  icon: GiCoffeeMug,
   fields: [
     {
       name: 'name',
@@ -35,8 +36,33 @@ const drinkSchema = {
         hotspot: true
       },
       validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      weak: false,
+      to: [
+        {
+          type: 'category'
+        }
+      ],
+      validation: (Rule) => Rule.required()
     }
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'name',
+      category: 'category.categoryname'
+    },
+    prepare: (selection) => {
+      const { title, category } = selection;
+      return {
+        title,
+        subtitle: `Category: ${category}`
+      };
+    }
+  }
 };
 
 export default drinkSchema;

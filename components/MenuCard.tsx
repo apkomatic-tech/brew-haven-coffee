@@ -1,36 +1,33 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { useNextSanityImage } from 'next-sanity-image';
-import client from '../client';
-
-function toSlug(value: string) {
-  return value.trim().toLowerCase().replace(/\s/gm, '-');
-}
+import { useNextSanityImage, UseNextSanityImageProps } from 'next-sanity-image';
+import client from '../sanityClient';
 
 type MenuCardProps = {
   id: number | string;
   image: any;
   title: string;
+  slug: string;
 };
 
-function MenuCard({ image, title }: MenuCardProps) {
-  const router = useRouter();
-  const sanityImage = useNextSanityImage(client, image);
+function MenuCard({ image, title, slug }: MenuCardProps) {
+  const imageProps = useNextSanityImage(client, image, {
+    blurUpImageWidth: 124,
+    blurUpImageQuality: 40,
+    blurUpAmount: 24
+  });
   return (
-    <button
-      type='button'
-      onClick={() => {
-        router.push(`/menu/${toSlug(title)}`, undefined, {});
-      }}>
+    <Link href={`/menu/${slug}`}>
       <a className='flex flex-col items-center'>
-        <div className='flex items-center justify-center p-6 mb-4 bg-gray-200 rounded-full w-36 h-36 sm:w-48 sm:h-48 md:w-64 md:h-64 hover:bg-gray-300 transition-all duration-150'>
-          <Image src={sanityImage?.src} alt={title} />
+        <div className='rounded-sm border border-gray-100 shadow-sm drop-shadow-sm hover:shadow-md transition-all duration-150'>
+          <div className='max-w-xs'>
+            <Image {...imageProps} alt={title} />
+          </div>
+          <h3 className='text-center font-bold text-lg mt-3 mb-3'>{title}</h3>
         </div>
-        <h3 className='text-center'>{title}</h3>
       </a>
-    </button>
+    </Link>
   );
 }
 

@@ -5,7 +5,7 @@ import MenuCard from '../../components/MenuCard';
 import { v1 as uuid } from 'uuid';
 import Drink from '../../public/drink.svg';
 import { sampleDrinks } from '../../data/sampledrinks';
-import client from '../../client';
+import client from '../../sanityClient';
 
 const MenuDetail: NextPage = (props) => {
   const router = useRouter();
