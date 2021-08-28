@@ -6,12 +6,13 @@ import { sampleDrinks } from '../../data/sampledrinks';
 import { useNextSanityImage } from 'next-sanity-image';
 
 function renderDrink(item: any) {
-  const { _id, name, image } = item;
+  const { _id, name, image, price } = item;
   const drinkData = {
     id: _id,
     title: name,
     image,
-    slug: item.slug.current
+    slug: item.slug.current,
+    price
   };
   return <MenuCard key={_id} {...drinkData} />;
 }
@@ -27,13 +28,13 @@ const Menu: NextPage = (props: any) => {
 
       {coldDrinks.length > 0 && (
         <>
-          <h2 className='font-bold mb-4 text-xl'>Cold Brews</h2>
-          <div className='grid grid-cols-2 gap-6 sm:grid-cols-3 mb-12'>{coldDrinks.map(renderDrink)}</div>
+          <h2 className='font-bold mb-6 text-xl'>Cold Brews</h2>
+          <div className='grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 mb-12'>{coldDrinks.map(renderDrink)}</div>
         </>
       )}
       {hotDrinks.length > 0 && (
         <>
-          <h2 className='font-bold mb-4 text-xl'>Hot Coffee</h2>
+          <h2 className='font-bold mb-6 text-xl'>Hot Coffee</h2>
           <div className='grid grid-cols-2 gap-6 sm:grid-cols-3 mb-12'>{hotDrinks.map(renderDrink)}</div>
         </>
       )}
