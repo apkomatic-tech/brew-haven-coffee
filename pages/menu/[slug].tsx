@@ -9,9 +9,7 @@ import sanityClient from '../../sanityClient';
 
 const MenuDetail: NextPage = (props: any) => {
   const detail = props.data;
-  const imageProps = useNextSanityImage(sanityClient, detail.image, {
-    enableBlurUp: true
-  });
+  const imageProps = useNextSanityImage(sanityClient, detail.image);
 
   return (
     <div className='page-content container px-4 mx-auto max-w-full lg:max-w-5xl'>
@@ -32,7 +30,7 @@ const MenuDetail: NextPage = (props: any) => {
       <div className='grid md:grid-cols-2'>
         {/* Product image */}
         <div className='mb-6 md:mb-0 md:max-w-lg md:mr-16'>
-          <Image objectFit='contain' width={400} height={400} className='sm:max-w-md' {...imageProps} layout='intrinsic' alt={detail.name} />
+          <Image objectFit='contain' className='sm:max-w-md' {...imageProps} layout='intrinsic' alt={detail.name} placeholder='blur' />
         </div>
         <div>
           <h1 className='text-3xl font-bold mb-12'>
