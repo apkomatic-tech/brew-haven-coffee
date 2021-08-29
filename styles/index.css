@@ -15,3 +15,7 @@
 .page-title {
   @apply text-2xl font-bold mb-16;
 }
+
+p {
+  @apply text-gray-600;
+}
