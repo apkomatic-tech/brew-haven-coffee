@@ -1,10 +1,11 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import Image from 'next/image';
-import sanityClient from '../../sanityClient';
 import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
-import { HiArrowNarrowLeft as LeftArrow, HiOutlineHome } from 'react-icons/hi';
+import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
+
+import sanityClient from '../../sanityClient';
 
 const MenuDetail: NextPage = (props: any) => {
   const detail = props.data;
@@ -17,21 +18,21 @@ const MenuDetail: NextPage = (props: any) => {
       {/* Breacrumbs */}
       <div className='flex items-center mb-6'>
         <Link href='/'>
-          <a className='text-3xl mr-2'>
-            <HiOutlineHome />
+          <a className='text-2xl mr-2'>
+            <HomeIcon />
           </a>
         </Link>
         <span className='mr-2'>/</span>
         <Link href='/menu'>
-          <a className='mr-2 font-bold'>Menu</a>
+          <a className='mr-2 font-bold hover:underline focus:underline'>Menu</a>
         </Link>
         <span className='mr-2'>/</span>
         <span className='text-gray-600'>{detail.name}</span>
       </div>
-      <div className='sm:flex'>
+      <div className='grid md:grid-cols-2'>
         {/* Product image */}
-        <div className='mb-6 sm:mb-0 sm:max-w-lg sm:mr-16'>
-          <Image objectFit='contain' width={400} height={400} className='sm:max-w-md' {...imageProps} layout='responsive' alt={detail.name} />
+        <div className='mb-6 md:mb-0 md:max-w-lg md:mr-16'>
+          <Image objectFit='contain' width={400} height={400} className='sm:max-w-md' {...imageProps} layout='intrinsic' alt={detail.name} />
         </div>
         <div>
           <h1 className='text-3xl font-bold mb-12'>
@@ -83,6 +84,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       "category": category->categoryname
     }[0]
   `);
+
+  if (!data) {
+    return {
+      redirect: {
+        destination: '/menu',
+        permanent: false
+      }
+    };
+  }
 
   return {
     props: {
