@@ -1,15 +1,49 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
 
 import sanityClient from '../../sanityClient';
+import { useState } from 'react';
+import axios from 'axios';
 
 const MenuDetail: NextPage = (props: any) => {
+  const router = useRouter();
   const detail = props.data;
   const imageProps = useNextSanityImage(sanityClient, detail.image);
+  const { id: productId } = detail;
+  const [qty, setQty] = useState(1);
+
+  function handleQtyUpdate(e: any) {
+    setQty(e.target.value);
+  }
+
+  async function handleAddToOrder() {
+    try {
+      const res = await axios.post(
+        '/api/order',
+        {
+          productid: productId,
+          quantity: Number(qty)
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (res.data.isSuccess) {
+        router.push('/order');
+      }
+    } catch (err) {
+      console.error(err.message);
+      throw err;
+    }
+  }
 
   return (
     <div className='page-content container px-4 mx-auto max-w-full lg:max-w-5xl'>
@@ -50,7 +84,11 @@ const MenuDetail: NextPage = (props: any) => {
                 Quantity
               </label>
               <div className='inline-block relative w-18'>
-                <select id='qty' className='block appearance-none w-full bg-white border border-gray-800 hover:border-gray-900 px-4 py-2 pr-8 leading-tight focus:outline-none'>
+                <select
+                  id='qty'
+                  onChange={handleQtyUpdate}
+                  value={qty}
+                  className='block appearance-none w-full bg-white border border-gray-800 hover:border-gray-900 px-4 py-2 pr-8 leading-tight focus:outline-none'>
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -64,9 +102,9 @@ const MenuDetail: NextPage = (props: any) => {
                 </div>
               </div>
             </div>
-            {/* Add To Cart */}
-            <button className='bg-primarydark text-white px-4 py-2 font-bold w-64' type='button'>
-              Add To Cart
+            {/* Add To Order */}
+            <button className='bg-primarydark text-white px-4 py-2 font-bold w-64' type='button' onClick={handleAddToOrder}>
+              Add To Order
             </button>
           </div>
         </div>
@@ -78,7 +116,7 @@ const MenuDetail: NextPage = (props: any) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = await sanityClient.fetch(groq`
     *[_type=='drink' && slug.current == '${context.query.slug}'] {
-      name, price, image, description,
+      "id": _id, name, price, image, description,
       "category": category->categoryname
     }[0]
   `);
