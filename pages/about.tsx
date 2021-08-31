@@ -7,6 +7,9 @@ import Blob from '../public/yellow-blob.svg';
 const About: NextPage = () => {
   return (
     <>
+      <Head>
+        <title>Doge Coffee | About Us</title>
+      </Head>
       <div className='page-content wrapper-narrow'>
         <h1 className='page-title mb-24 relative z-10'>
           About Doge Coffee

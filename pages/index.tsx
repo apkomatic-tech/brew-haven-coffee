@@ -10,6 +10,9 @@ import Wave from '../public/wave.svg';
 const Home: NextPage = () => {
   return (
     <>
+      <Head>
+        <title>Doge Coffee | Home</title>
+      </Head>
       <div className='pt-12 pb-18 px-8 md:pt-32'>
         <div className='container mx-auto max-w-full lg:max-w-7xl'>
           <div className='flex relative'>

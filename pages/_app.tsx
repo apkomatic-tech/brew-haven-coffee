@@ -7,7 +7,7 @@ import '../styles/index.css';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <CartProvider>
-      <Layout title='Home'>
+      <Layout>
         <Component {...pageProps} />
       </Layout>
     </CartProvider>
