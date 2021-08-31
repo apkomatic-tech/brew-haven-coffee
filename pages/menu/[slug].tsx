@@ -10,40 +10,24 @@ import sanityClient from '../../sanityClient';
 import { useState } from 'react';
 import axios from 'axios';
 import Head from 'next/head';
+import { useContext } from 'react';
+import CartContext from '../../state/cartContext';
 
 const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
   const imageProps = useNextSanityImage(sanityClient, detail.image);
-  const { id: productId } = detail;
   const [qty, setQty] = useState(1);
+  const ctx = useContext(CartContext);
 
   function handleQtyUpdate(e: any) {
     setQty(e.target.value);
   }
 
-  async function handleAddToOrder() {
-    try {
-      const res = await axios.post(
-        '/api/order',
-        {
-          productid: productId,
-          quantity: Number(qty)
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      if (res.data.isSuccess) {
-        router.push('/order');
-      }
-    } catch (err) {
-      console.error(err.message);
-      throw err;
-    }
+  function handleAddToOrder() {
+    const orderItem = { ...detail, title: detail.name, quantity: Number(qty) };
+    ctx?.addToOrder(orderItem);
+    router.push('/order');
   }
 
   return (

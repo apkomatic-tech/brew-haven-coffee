@@ -1,5 +1,8 @@
 export type OrderItem = {
   id: number | string;
   title: string;
-  qty: number;
+  quantity: number;
+  image?: any;
+  description?: any;
+  category?: any;
 };
