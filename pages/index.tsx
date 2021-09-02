@@ -59,7 +59,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div>
+      {/* <div>
         <div className='hidden md:block'>
           <Image src={Wave} alt='' />
         </div>
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
             <h2 className='text-2xl font-bold mb-4'>Popular Drinks</h2>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
