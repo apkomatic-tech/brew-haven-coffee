@@ -24,7 +24,7 @@ function LineItem(item: OrderItem) {
         </h3>
         <p>Quantity: {quantity}</p>
       </div>
-      <button className='text-primary font-bold absolute bottom-6 right-0' type='button'>
+      <button className='text-primary font-bold absolute bottom-6 right-0' type='button' onClick={() => ctx?.removeFromOrder(id)}>
         Remove
       </button>
     </div>
@@ -34,7 +34,6 @@ function LineItem(item: OrderItem) {
 const Order: NextPage = () => {
   const ctx = useContext(CartContext);
   const orderItems = ctx?.items ?? [];
-  console.log(orderItems.length);
   return (
     <>
       <Head>
