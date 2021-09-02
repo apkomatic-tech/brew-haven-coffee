@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { useMemo } from 'react';
 import { createContext } from 'react';
 import { useLocalStorage } from 'react-use';
 
@@ -10,6 +11,24 @@ const CartContext = createContext<CartContextInterface | null>(null);
 
 const CartProvider = ({ children }: { children: any }) => {
   const [items, setItems] = useLocalStorage<OrderItem[]>('order', []);
+  const subtotal = useMemo(() => {
+    return (
+      items
+        ?.reduce((acc, item) => {
+          acc += item.price * item.quantity;
+          return acc;
+        }, 0)
+        .toFixed(2) ?? 0
+    );
+  }, [items]);
+  const totalItems = useMemo(() => {
+    return (
+      items?.reduce((acc, item) => {
+        acc += item.quantity;
+        return acc;
+      }, 0) ?? 0
+    );
+  }, [items]);
 
   function addToOrder(product: any) {
     const orderItems = items ?? [];
@@ -25,14 +44,15 @@ const CartProvider = ({ children }: { children: any }) => {
 
   function removeFromOrder(id: any) {
     const ix = items?.findIndex((item) => item.id === id) ?? -1;
-    if (ix > -1) {
+    if (ix > -1 && typeof items !== 'undefined') {
       setItems([...items.slice(0, ix), ...items.slice(ix + 1)]);
     }
   }
 
   const sampleCartContext: CartContextInterface = {
-    count: items?.length ?? 0,
+    count: totalItems,
     items: items || [],
+    subtotal,
     addToOrder,
     removeFromOrder
   };
