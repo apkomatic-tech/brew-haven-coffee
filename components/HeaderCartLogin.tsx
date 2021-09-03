@@ -15,7 +15,7 @@ function HeaderCartLogin() {
           <UserIcon />
         </a>
       </Link>
-      <Link href='/order'>
+      <Link href='/order/review'>
         <a className='relative'>
           <span className='cart-count-badge -top-2 -right-2 absolute text-sm w-5 h-5 md:w-6 md:h-6 bg-primarydark text-white text-center leading-none rounded-full p-1'>
             {ctx.count}

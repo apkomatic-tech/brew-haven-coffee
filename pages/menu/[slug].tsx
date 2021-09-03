@@ -27,7 +27,7 @@ const MenuDetail: NextPage = (props: any) => {
   function handleAddToOrder() {
     const orderItem = { ...detail, title: detail.name, quantity: Number(qty) };
     ctx?.addToOrder(orderItem);
-    router.push('/order');
+    router.push('/order/review');
   }
 
   return (

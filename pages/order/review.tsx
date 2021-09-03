@@ -4,9 +4,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext } from 'react';
-import sanityClient from '../sanityClient';
-import CartContext from '../state/cartContext';
-import { OrderItem } from '../types/OrderItem';
+import sanityClient from '../../sanityClient';
+import CartContext from '../../state/cartContext';
+import { OrderItem } from '../../types/OrderItem';
 
 function LineItem(item: OrderItem) {
   const { id, title, image, quantity, price } = item;
@@ -65,9 +65,9 @@ const Order: NextPage = () => {
                 </div>
                 <div className='font-bold text-xl'>${ctx?.subtotal}</div>
               </div>
-              <Link href='/'>
+              <Link href='/order/payment'>
                 <a className='font-bold rounded-sm bg-primary text-white px-3 py-3 text-center w-full block opacity-100 hover:opacity-90 transition transition-opacity md:ml-auto md:w-72'>
-                  Proceed to Order
+                  Proceed to Payment
                 </a>
               </Link>
             </div>
