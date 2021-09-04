@@ -1,6 +1,5 @@
 import React, { useReducer, useState } from 'react';
 import { useEffect } from 'react';
-import { useMemo } from 'react';
 import { createContext } from 'react';
 import { useLocalStorage } from 'react-use';
 
@@ -87,7 +86,7 @@ const CartContext = createContext<{
 }>({ state: initialState, dispatch: () => {} });
 
 const CartProvider = ({ children }: CartProviderProps) => {
-  const [storageState, setStorageState] = useLocalStorage('order', initialState);
+  const [storageState, setStorageState] = useLocalStorage<CartState>('order', initialState);
   const [state, dispatch] = useReducer(cartReducer, storageState || initialState);
 
   useEffect(() => {
