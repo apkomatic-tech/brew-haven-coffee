@@ -1,35 +1,9 @@
+import React, { useContext } from 'react';
 import type { NextPage } from 'next';
-import { useNextSanityImage } from 'next-sanity-image';
 import Head from 'next/head';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useContext } from 'react';
-import sanityClient from '../../sanityClient';
 import CartContext from '../../state/cartContext';
-import { OrderItem } from '../../types/OrderItem';
-
-function LineItem(item: OrderItem) {
-  const { id, title, image, quantity, price } = item;
-  const imageProps = useNextSanityImage(sanityClient, image);
-  const { dispatch } = useContext(CartContext);
-
-  return (
-    <div className='flex mb-6 pb-6 border-b border-gray-200 relative'>
-      <div>
-        <Image {...imageProps} width={167} height={167} alt={title} />
-      </div>
-      <div className='ml-4 block flex-grow'>
-        <h3 className='text-base md:text-lg font-bold flex justify-between mb-1 text-black'>
-          <span>{title}</span> <span>${price}</span>
-        </h3>
-        <p>Quantity: {quantity}</p>
-      </div>
-      <button className='text-primary font-bold absolute bottom-6 right-0' type='button' onClick={() => dispatch({ type: 'REMOVE_ORDER', payload: id })}>
-        Remove
-      </button>
-    </div>
-  );
-}
+import OrderLineItem from '../../components/OrderLineItem';
 
 const Order: NextPage = () => {
   const { state } = useContext(CartContext);
@@ -54,7 +28,7 @@ const Order: NextPage = () => {
           <div>
             <div className='mb-6'>
               {orderItems.map((item) => (
-                <LineItem key={item.id} {...item} />
+                <OrderLineItem key={item.id} {...item} />
               ))}
             </div>
             <div className='mb-24 pt-6'>
