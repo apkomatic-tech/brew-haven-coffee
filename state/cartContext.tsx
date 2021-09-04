@@ -1,63 +1,105 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
 import { createContext } from 'react';
 import { useLocalStorage } from 'react-use';
 
-import { CartContextInterface } from '../interfaces/CartInterface';
 import { OrderItem } from '../types/OrderItem';
 
-const CartContext = createContext<CartContextInterface | null>(null);
+type CartProviderProps = {
+  children: React.ReactNode;
+};
+type CartState = {
+  items: OrderItem[];
+  count: number;
+  subtotal: number;
+};
+type CartAction = { type: 'ADD_ORDER'; payload: OrderItem } | { type: 'REMOVE_ORDER'; payload: number | string } | { type: 'CALCULATE_SUBTOTAL' } | { type: 'GET_ITEM_COUNT' };
 
-const CartProvider = ({ children }: { children: any }) => {
-  const [items, setItems] = useLocalStorage<OrderItem[]>('order', []);
-  const subtotal = useMemo(() => {
-    return (
-      items
-        ?.reduce((acc, item) => {
-          acc += item.price * item.quantity;
+const initialState = {
+  items: [],
+  count: 0,
+  subtotal: 0
+};
+
+const cartReducer = (state: CartState, action: CartAction) => {
+  switch (action.type) {
+    case 'ADD_ORDER':
+      const currentOrderItem = state.items.find((item: OrderItem) => item.id === action.payload.id);
+
+      if (currentOrderItem) {
+        const updateIndex = state.items.indexOf(currentOrderItem);
+        return {
+          ...state,
+          items: [
+            ...state.items.slice(0, updateIndex),
+            {
+              ...currentOrderItem,
+              quantity: state.items[updateIndex].quantity + action.payload.quantity
+            },
+            ...state.items.slice(updateIndex + 1)
+          ]
+        };
+      }
+
+      return {
+        ...state,
+        items: [...state.items, { ...action.payload }]
+      };
+    case 'REMOVE_ORDER':
+      const ix = state.items.findIndex((item: OrderItem) => item.id === action.payload) ?? -1;
+      if (ix > -1 && typeof state.items !== 'undefined') {
+        const updatedItems = [...state.items.slice(0, ix), ...state.items.slice(ix + 1)];
+        return {
+          ...state,
+          items: updatedItems
+        };
+      }
+      return state;
+    case 'CALCULATE_SUBTOTAL':
+      return {
+        ...state,
+        subtotal: Number(
+          state.items
+            .reduce((acc: number, item: OrderItem) => {
+              acc += item.price * item.quantity;
+              return acc;
+            }, 0)
+            .toFixed(2)
+        )
+      };
+    case 'GET_ITEM_COUNT':
+      return {
+        ...state,
+        count: state.items.reduce((acc: number, item: OrderItem) => {
+          acc += item.quantity;
           return acc;
         }, 0)
-        .toFixed(2) ?? 0
-    );
-  }, [items]);
-  const totalItems = useMemo(() => {
-    return (
-      items?.reduce((acc, item) => {
-        acc += item.quantity;
-        return acc;
-      }, 0) ?? 0
-    );
-  }, [items]);
-
-  function addToOrder(product: any) {
-    const orderItems = items ?? [];
-    const indexOfExistingOrder = orderItems.findIndex((x: any) => x.id === product.id);
-    if (indexOfExistingOrder > -1) {
-      orderItems[indexOfExistingOrder].quantity += 1;
-      return setItems(orderItems);
-    }
-
-    orderItems.push(product);
-    return setItems(orderItems);
+      };
+    default:
+      return { ...state };
   }
+};
 
-  function removeFromOrder(id: any) {
-    const ix = items?.findIndex((item) => item.id === id) ?? -1;
-    if (ix > -1 && typeof items !== 'undefined') {
-      setItems([...items.slice(0, ix), ...items.slice(ix + 1)]);
-    }
-  }
+const CartContext = createContext<{
+  state: CartState;
+  dispatch: React.Dispatch<CartAction>;
+}>({ state: initialState, dispatch: () => {} });
 
-  const sampleCartContext: CartContextInterface = {
-    count: totalItems,
-    items: items || [],
-    subtotal,
-    addToOrder,
-    removeFromOrder
-  };
+const CartProvider = ({ children }: CartProviderProps) => {
+  const [storageState, setStorageState] = useLocalStorage('order', initialState);
+  const [state, dispatch] = useReducer(cartReducer, storageState || initialState);
 
-  return <CartContext.Provider value={sampleCartContext}>{children}</CartContext.Provider>;
+  useEffect(() => {
+    setStorageState(state);
+  }, [state, setStorageState]);
+
+  useEffect(() => {
+    dispatch({ type: 'CALCULATE_SUBTOTAL' });
+    dispatch({ type: 'GET_ITEM_COUNT' });
+  }, [state.items]);
+
+  return <CartContext.Provider value={{ state, dispatch }}>{children}</CartContext.Provider>;
 };
 
 export default CartContext;

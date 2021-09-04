@@ -18,7 +18,7 @@ const MenuDetail: NextPage = (props: any) => {
   const detail = props.data;
   const imageProps = useNextSanityImage(sanityClient, detail.image);
   const [qty, setQty] = useState(1);
-  const ctx = useContext(CartContext);
+  const { dispatch } = useContext(CartContext);
 
   function handleQtyUpdate(e: any) {
     setQty(e.target.value);
@@ -26,7 +26,7 @@ const MenuDetail: NextPage = (props: any) => {
 
   function handleAddToOrder() {
     const orderItem = { ...detail, title: detail.name, quantity: Number(qty) };
-    ctx?.addToOrder(orderItem);
+    dispatch({ type: 'ADD_ORDER', payload: orderItem });
     router.push('/order/review');
   }
 

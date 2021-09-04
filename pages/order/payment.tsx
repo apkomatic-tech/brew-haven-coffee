@@ -7,16 +7,17 @@ import CartContext from '../../state/cartContext';
 
 const Payment: NextPage = () => {
   const router = useRouter();
-  const ctx = useContext(CartContext);
+  const { state } = useContext(CartContext);
+  const { items: orderItems } = state;
   const [deliveryOption, setDeliveryOption] = useState('delivery'); // or pickup
 
   const deliveryBoxClass = 'relative border border-gray-400 rounded-md p-6 text-left';
 
   useEffect(() => {
-    if (!ctx?.items.length) {
+    if (!orderItems.length) {
       router.push('/menu');
     }
-  }, [ctx?.items]);
+  }, [orderItems.length, router]);
 
   return (
     <>
