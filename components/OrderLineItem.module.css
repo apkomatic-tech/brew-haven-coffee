@@ -1,0 +1,7 @@
+.OrderLineItem {
+  @apply flex mb-6 pb-6 border-b border-gray-200 relative;
+}
+
+.OrderLineItemRemoveBtn {
+  @apply flex items-center text-primary font-bold absolute bottom-6 right-0 py-1 px-2 rounded-sm text-sm hover:bg-primaryOpaque;
+}
