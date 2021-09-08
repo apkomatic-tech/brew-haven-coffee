@@ -1,20 +1,18 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
-import { useNextSanityImage } from 'next-sanity-image';
 import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import sanityClient from '../../sanityClient';
-import CartContext from '../../state/cartContext';
 import { OrderItem } from '../../types/OrderItem';
+import CartContext from '../../state/cartContext';
+import OrderSummaryItem from '../../components/OrderSummaryItem';
 
 import styles from './payment.module.css';
-import { useForm } from 'react-hook-form';
 
-interface FormData {
+interface IFormData {
   firstName: string;
   lastName: string;
   emailAddress: string;
@@ -23,25 +21,6 @@ interface FormData {
   city: string;
   zipcode: string;
 }
-
-function OrderSummaryItem(props: OrderItem) {
-  const image = useNextSanityImage(sanityClient, props.image);
-  return (
-    <div className='p-6 flex border-b border-gray-300'>
-      <div className='w-24 h-24 mr-8'>
-        <Image {...image} alt={props.title} />
-      </div>
-      <div className='flex-grow'>
-        <div className='font-bold'>{props.title}</div>
-        <div className='font-bold mt-10'>${props.price.toFixed(2)}</div>
-      </div>
-    </div>
-  );
-}
-
-type ValidationMessageProps = {
-  name: string;
-};
 
 // validation
 const schema = yup.object().shape({
@@ -59,14 +38,14 @@ const Payment: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: yupResolver(schema)
   });
   const { state, dispatch } = useContext(CartContext);
   const { items: orderItems } = state;
   const serviceFee = 5;
 
-  function processOrder(data: FormData) {
+  function processOrder(data: IFormData) {
     alert(JSON.stringify(data, null, 4));
   }
 
@@ -158,7 +137,7 @@ const Payment: NextPage = () => {
               <h3 className='text-xl mb-7 font-bold'>Order summary</h3>
               <div className={styles.summaryBlock}>
                 {orderItems.map((item: OrderItem) => (
-                  <OrderSummaryItem key={item.id} {...item} />
+                  <OrderSummaryItem key={item.id} item={item} removeFromOrder={() => dispatch({ type: 'REMOVE_ORDER', payload: item.id })} />
                 ))}
                 <div className='p-6'>
                   <div className='flex justify-between py-3'>

@@ -4,15 +4,15 @@ import Image from 'next/image';
 import { useNextSanityImage, UseNextSanityImageProps } from 'next-sanity-image';
 import client from '../sanityClient';
 
-type MenuCardProps = {
+interface IMenuCard {
   id: number | string;
   image: any;
   title: string;
   slug: string;
   price: number;
-};
+}
 
-function MenuCard({ image, title, slug, price }: MenuCardProps) {
+const MenuCard: React.FC<IMenuCard> = ({ image, title, slug, price }) => {
   const imageProps = useNextSanityImage(client, image);
   return (
     <Link href={`/menu/${slug}`}>
@@ -30,6 +30,6 @@ function MenuCard({ image, title, slug, price }: MenuCardProps) {
       </a>
     </Link>
   );
-}
+};
 
 export default MenuCard;

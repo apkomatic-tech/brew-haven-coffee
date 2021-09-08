@@ -8,12 +8,12 @@ import TwitterIcon from '../public/social-icons/twitter.svg';
 import YouTubeIcon from '../public/social-icons/youtube.svg';
 import Image from 'next/image';
 
-type LayoutProps = {
+interface ILayout {
+  children: React.ReactNode | React.ReactNode[];
   title?: string;
-  children: any;
-};
+}
 
-const Layout = ({ title, children }: LayoutProps) => {
+const Layout: React.FC<ILayout> = ({ title, children }) => {
   return (
     <>
       <Head>

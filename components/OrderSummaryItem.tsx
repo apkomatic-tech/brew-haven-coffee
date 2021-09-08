@@ -1,0 +1,36 @@
+import React from 'react';
+import Image from 'next/image';
+import { useNextSanityImage } from 'next-sanity-image';
+import { HiTrash as RemoveIcon } from 'react-icons/hi';
+
+import sanityClient from '../sanityClient';
+import { OrderItem } from '../types/OrderItem';
+
+interface IOrderSummaryItemProps {
+  item: OrderItem;
+  removeFromOrder: () => void;
+}
+
+const OrderSummaryItem: React.FC<IOrderSummaryItemProps> = ({ item: { title, price, image }, removeFromOrder }) => {
+  const imageProps = useNextSanityImage(sanityClient, image);
+
+  return (
+    <div className='p-6 flex border-b border-gray-300 relative'>
+      <div className='w-24 h-24 mr-8'>
+        <Image {...imageProps} alt={title} />
+      </div>
+      <div className='flex-grow'>
+        <div className='font-bold'>{title}</div>
+        <div className='font-bold mt-10'>${price.toFixed(2)}</div>
+        <button type='button' onClick={removeFromOrder} className='flex items-center absolute bottom-6 right-6 text-primarydark hover:bg-primaryOpaque p-1 text-sm'>
+          <span className='mr-1'>
+            <RemoveIcon />
+          </span>
+          Remove
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default OrderSummaryItem;
