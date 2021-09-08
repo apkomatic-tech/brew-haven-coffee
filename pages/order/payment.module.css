@@ -7,3 +7,6 @@
 .label {
   @apply inline-block mb-2 cursor-pointer font-bold;
 }
+.summaryBlock {
+  @apply border border-gray-300 shadow-sm drop-shadow-sm;
+}
