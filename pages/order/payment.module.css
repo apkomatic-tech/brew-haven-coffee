@@ -1,0 +1,9 @@
+.block {
+  @apply pb-10 mb-10 border-b border-gray-200;
+}
+.field {
+  @apply p-3 rounded-sm leading-tight border border-gray-400 w-full;
+}
+.label {
+  @apply inline-block mb-2 cursor-pointer font-bold;
+}
