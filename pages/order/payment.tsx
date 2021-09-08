@@ -1,15 +1,28 @@
+import { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useNextSanityImage } from 'next-sanity-image';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
-import { HiCheckCircle } from 'react-icons/hi';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import sanityClient from '../../sanityClient';
 import CartContext from '../../state/cartContext';
 import { OrderItem } from '../../types/OrderItem';
 
 import styles from './payment.module.css';
+import { useForm } from 'react-hook-form';
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  address1: string;
+  address2: string;
+  city: string;
+  zipcode: string;
+}
 
 function OrderSummaryItem(props: OrderItem) {
   const image = useNextSanityImage(sanityClient, props.image);
@@ -26,11 +39,36 @@ function OrderSummaryItem(props: OrderItem) {
   );
 }
 
+type ValidationMessageProps = {
+  name: string;
+};
+
+// validation
+const schema = yup.object().shape({
+  firstName: yup.string().trim().required('First name is a required field'),
+  lastName: yup.string().trim().required('Last name is a required field'),
+  emailAddress: yup.string().trim().required('Email is a required field').email('Please enter a valid email'),
+  address1: yup.string().trim().required('Address 1 is a required field'),
+  city: yup.string().trim().required('City is a required field'),
+  zipcode: yup.string().trim().required('Zip Code is a required field')
+});
+
 const Payment: NextPage = () => {
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: yupResolver(schema)
+  });
   const { state, dispatch } = useContext(CartContext);
   const { items: orderItems } = state;
   const serviceFee = 5;
+
+  function processOrder(data: FormData) {
+    alert(JSON.stringify(data, null, 4));
+  }
 
   useEffect(() => {
     if (!orderItems.length) {
@@ -44,32 +82,35 @@ const Payment: NextPage = () => {
         <title>Doge Coffee | Payment</title>
       </Head>
       <div className='page-content wrapper'>
-        <form>
+        <form onSubmit={handleSubmit(processOrder)}>
           <div className='grid md:grid-cols-2 md:gap-12'>
             <div>
               {/* Contact Info block */}
               <div className={styles.block}>
                 <h3 className='text-xl mb-7 font-bold'>Your Information</h3>
                 <div className='grid gap-6 sm:grid-cols-2 mb-6'>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='firstname' className={styles.label}>
                       First Name
                     </label>
-                    <input type='text' id='firstname' name='firstname' className={styles.field} />
+                    <input type='text' id='firstname' className={`${styles.field} ${errors.firstName ? styles.fielderror : ''}`} {...register('firstName')} />
+                    {errors.firstName && <div className={styles.errorMessage}>{errors.firstName.message}</div>}
                   </div>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='lastname' className={styles.label}>
                       Last Name
                     </label>
-                    <input type='text' id='lastname' name='lastname' className={styles.field} />
+                    <input type='text' id='lastname' className={`${styles.field} ${errors.lastName ? styles.fielderror : ''}`} {...register('lastName')} />
+                    {errors.lastName && <div className={styles.errorMessage}>{errors.lastName.message}</div>}
                   </div>
                 </div>
                 <div className='grid grid-cols-1'>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='email' className={styles.label}>
                       Email address
                     </label>
-                    <input type='email' id='email' name='email' className={styles.field} />
+                    <input type='email' id='email' className={`${styles.field} ${errors.emailAddress ? styles.fielderror : ''}`} {...register('emailAddress')} />
+                    {errors.emailAddress && <div className={styles.errorMessage}>{errors.emailAddress.message}</div>}
                   </div>
                 </div>
               </div>
@@ -77,33 +118,36 @@ const Payment: NextPage = () => {
               <div className={styles.block}>
                 <h3 className='text-xl mb-7 font-bold'>Your Delivery Address</h3>
                 <div className='grid grid-cols-1 mb-6'>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='delivery_address' className={styles.label}>
                       Address
                     </label>
-                    <input type='text' id='delivery_address' name='delivery_address' className={styles.field} />
+                    <input type='text' id='delivery_address' className={`${styles.field} ${errors.address1 ? styles.fielderror : ''}`} {...register('address1')} />
+                    {errors.address1 && <div className={styles.errorMessage}>{errors.address1.message}</div>}
                   </div>
                 </div>
                 <div className='grid grid-cols-1 mb-6'>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='delivery_address2' className={styles.label}>
                       Address 2
                     </label>
-                    <input type='text' id='delivery_address2' name='delivery_address2' className={styles.field} />
+                    <input type='text' id='delivery_address2' name='delivery_address2' className={`${styles.field} ${errors.address2 ? styles.fielderror : ''}`} />
                   </div>
                 </div>
                 <div className='grid gap-6 sm:grid-cols-2 mb-6'>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='delivery_city' className={styles.label}>
                       City
                     </label>
-                    <input type='text' id='delivery_city' name='delivery_city' className={styles.field} />
+                    <input type='text' id='delivery_city' className={`${styles.field} ${errors.city ? styles.fielderror : ''}`} {...register('city')} />
+                    {errors.city && <div className={styles.errorMessage}>{errors.city.message}</div>}
                   </div>
-                  <div>
+                  <div className={styles.fieldBlock}>
                     <label htmlFor='delivery_zip' className={styles.label}>
                       Zip Code
                     </label>
-                    <input type='text' id='delivery_zip' name='delivery_zip' className={styles.field} />
+                    <input type='text' id='delivery_zip' className={`${styles.field} ${errors.zipcode ? styles.fielderror : ''}`} {...register('zipcode')} />
+                    {errors.zipcode && <div className={styles.errorMessage}>{errors.zipcode.message}</div>}
                   </div>
                 </div>
               </div>
