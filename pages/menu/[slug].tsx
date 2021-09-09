@@ -103,7 +103,8 @@ const MenuDetail: NextPage = (props: any) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = await sanityClient.fetch(groq`
     *[_type=='drink' && slug.current == '${context.query.slug}'] {
-      "id": _id, name, price, image, description,
+      "id": _id, name, price, image, description, 
+      "slug": slug.current,
       "category": category->categoryname
     }[0]
   `);

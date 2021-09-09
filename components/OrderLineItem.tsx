@@ -1,5 +1,6 @@
 import React from 'react';
 import { useContext } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useNextSanityImage } from 'next-sanity-image';
 import { HiOutlineTrash as DeleteIcon } from 'react-icons/hi';
@@ -14,12 +15,14 @@ function OrderLineItem(item: OrderItem) {
   const { id, title, image, quantity, price } = item;
   const imageProps = useNextSanityImage(sanityClient, image)!;
   const { dispatch } = useContext(CartContext);
-
+  console.log(item.slug);
   return (
     <div className={styles.OrderLineItem}>
-      <div>
-        <Image {...imageProps} width={167} height={167} alt={title} />
-      </div>
+      <Link href={`/menu/${item.slug}`}>
+        <a>
+          <Image {...imageProps} width={167} height={167} alt={title} />
+        </a>
+      </Link>
       <div className='ml-4 block flex-grow'>
         <h3 className='text-base md:text-lg font-bold flex justify-between mb-1 text-black'>
           <span>{title}</span> <span>${price.toFixed(2)}</span>

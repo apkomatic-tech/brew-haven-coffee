@@ -4,6 +4,7 @@ export type OrderItem = {
   quantity: number;
   price: number;
   image?: any;
-  description?: any;
-  category?: any;
+  description?: string;
+  category?: string;
+  slug?: string;
 };

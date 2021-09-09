@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useNextSanityImage } from 'next-sanity-image';
 import { HiTrash as RemoveIcon } from 'react-icons/hi';
 
@@ -12,14 +13,16 @@ interface IOrderSummaryItemProps {
   removeFromOrder: () => React.Dispatch<CartAction> | void;
 }
 
-const OrderSummaryItem: React.FC<IOrderSummaryItemProps> = ({ item: { title, price, image }, removeFromOrder }) => {
+const OrderSummaryItem: React.FC<IOrderSummaryItemProps> = ({ item: { title, price, image, slug }, removeFromOrder }) => {
   const imageProps = useNextSanityImage(sanityClient, image)!;
 
   return (
     <div className='p-6 flex border-b border-gray-300 relative'>
-      <div className='w-24 h-24 mr-8'>
-        <Image {...imageProps} alt={title} />
-      </div>
+      <Link href={`/menu/${slug}`} passHref>
+        <a className='w-24 h-24 mr-8 block'>
+          <Image {...imageProps} alt={title} />
+        </a>
+      </Link>
       <div className='flex-grow'>
         <div className='font-bold'>{title}</div>
         <div className='font-bold mt-10'>${price.toFixed(2)}</div>
