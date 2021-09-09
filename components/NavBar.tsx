@@ -27,10 +27,10 @@ function NavBar() {
       <div className='hidden md:flex'>
         <nav className='hidden sm:grid grid-flow-col-dense gap-4 text-gray-700 font-bold items-center'>
           <Link href='/'>
-            <a className='hover:text-primary'>Home</a>
+            <a className={`hover:text-primary ${pathname === '/' ? 'text-primarydark' : ''}`}>Home</a>
           </Link>
           <Link href='/about'>
-            <a className='hover:text-primary'>About</a>
+            <a className={`hover:text-primary ${pathname === '/about' ? 'text-primarydark' : ''}`}>About</a>
           </Link>
           <Link href='/menu'>
             <a className='bg-secondary text-black py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200'>
