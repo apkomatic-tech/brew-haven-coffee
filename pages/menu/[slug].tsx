@@ -8,7 +8,6 @@ import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
 
 import sanityClient from '../../sanityClient';
 import { useState } from 'react';
-import axios from 'axios';
 import Head from 'next/head';
 import { useContext } from 'react';
 import CartContext from '../../state/cartContext';
@@ -56,10 +55,8 @@ const MenuDetail: NextPage = (props: any) => {
             <Image objectFit='contain' className='sm:max-w-md' {...imageProps} layout='intrinsic' alt={detail.name} placeholder='blur' />
           </div>
           <div>
-            <h1 className='text-3xl font-bold mb-12'>
-              {detail.name} - <span>$</span>
-              {detail.price}
-            </h1>
+            <h1 className='text-3xl font-bold mb-6'>{detail.name}</h1>
+            <p className='text-2xl mb-12'>${detail.price}</p>
             {detail.description && (
               <>
                 <h3 className='text-xl font-bold mb-6'>Description</h3>
@@ -68,7 +65,7 @@ const MenuDetail: NextPage = (props: any) => {
             )}
             <div className='flex mt-8 items-end'>
               {/* Quantity */}
-              <div className='flex flex-col mr-2'>
+              {/* <div className='flex flex-col mr-2'>
                 <label className='cursor-pointer mb-1' htmlFor='qty'>
                   Quantity
                 </label>
@@ -90,9 +87,9 @@ const MenuDetail: NextPage = (props: any) => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* Add To Order */}
-              <button className='bg-primarydark text-white px-4 py-2 font-bold w-64' type='button' onClick={handleAddToOrder}>
+              <button className='bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md' type='button' onClick={handleAddToOrder}>
                 Add To Order
               </button>
             </div>
