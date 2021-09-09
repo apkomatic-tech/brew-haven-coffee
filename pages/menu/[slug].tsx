@@ -16,7 +16,7 @@ import CartContext from '../../state/cartContext';
 const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
-  const imageProps = useNextSanityImage(sanityClient, detail.image);
+  const imageProps = useNextSanityImage(sanityClient, detail.image)!;
   const [qty, setQty] = useState(1);
   const { dispatch } = useContext(CartContext);
 

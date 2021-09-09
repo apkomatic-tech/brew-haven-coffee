@@ -5,14 +5,15 @@ import { HiTrash as RemoveIcon } from 'react-icons/hi';
 
 import sanityClient from '../sanityClient';
 import { OrderItem } from '../types/OrderItem';
+import { CartAction } from '../state/cartContext';
 
 interface IOrderSummaryItemProps {
   item: OrderItem;
-  removeFromOrder: () => void;
+  removeFromOrder: () => React.Dispatch<CartAction> | void;
 }
 
 const OrderSummaryItem: React.FC<IOrderSummaryItemProps> = ({ item: { title, price, image }, removeFromOrder }) => {
-  const imageProps = useNextSanityImage(sanityClient, image);
+  const imageProps = useNextSanityImage(sanityClient, image)!;
 
   return (
     <div className='p-6 flex border-b border-gray-300 relative'>

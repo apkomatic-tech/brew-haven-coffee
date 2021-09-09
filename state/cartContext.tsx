@@ -13,7 +13,11 @@ type CartState = {
   count: number;
   subtotal: number;
 };
-type CartAction = { type: 'ADD_ORDER'; payload: OrderItem } | { type: 'REMOVE_ORDER'; payload: number | string } | { type: 'CALCULATE_SUBTOTAL' } | { type: 'GET_ITEM_COUNT' };
+export type CartAction =
+  | { type: 'ADD_ORDER'; payload: OrderItem }
+  | { type: 'REMOVE_ORDER'; payload: number | string }
+  | { type: 'CALCULATE_SUBTOTAL' }
+  | { type: 'GET_ITEM_COUNT' };
 
 const initialState = {
   items: [],

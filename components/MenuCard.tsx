@@ -13,7 +13,7 @@ interface IMenuCard {
 }
 
 const MenuCard: React.FC<IMenuCard> = ({ image, title, slug, price }) => {
-  const imageProps = useNextSanityImage(client, image);
+  const imageProps = useNextSanityImage(client, image)!;
   return (
     <Link href={`/menu/${slug}`}>
       <a className='flex flex-col items-center h-full'>
