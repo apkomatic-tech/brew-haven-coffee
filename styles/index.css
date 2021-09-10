@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --toastify-color-dark: rgb(11, 2, 17);
+  --toastify-text-color-dark: rgba(255, 255, 255, 0.9);
+  --toastify-toast-min-height: 86px;
+  --toastify-toast-width: 320px;
+}
+
+@media (min-width: 767px) {
+  :root {
+    --toastify-toast-width: 620px;
+  }
+}
+
 .page-content {
   @apply mt-20 mb-16;
 }
@@ -11,11 +24,9 @@
 .wrapper-narrow {
   @apply container px-4 mx-auto max-w-full lg:max-w-3xl;
 }
-
 .page-title {
   @apply text-2xl font-bold mb-16;
 }
-
 p {
   @apply text-gray-600;
 }

@@ -5,6 +5,8 @@ import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
+import { ToastContainer, toast } from 'react-toastify';
+import { GiCoffeeMug as CoffeeCup } from 'react-icons/gi';
 
 import sanityClient from '../../sanityClient';
 import { useState } from 'react';
@@ -19,15 +21,37 @@ const MenuDetail: NextPage = (props: any) => {
   const [qty, setQty] = useState(1);
   const { dispatch } = useContext(CartContext);
 
-  function handleQtyUpdate(e: any) {
-    setQty(e.target.value);
-  }
+  // function handleQtyUpdate(e: any) {
+  //   setQty(e.target.value);
+  // }
 
-  function handleAddToOrder() {
+  const renderMessage = (productName: string) => {
+    return (
+      <div className='flex justify-center items-center'>
+        <div className='text-4xl mr-4'>
+          <CoffeeCup />
+        </div>{' '}
+        <div>
+          Such success! You added <strong>{productName}</strong> to your order.
+        </div>
+      </div>
+    );
+  };
+
+  const handleAddToOrder = (): void => {
     const orderItem = { ...detail, title: detail.name, quantity: Number(qty) };
     dispatch({ type: 'ADD_ORDER', payload: orderItem });
-    router.push('/order/review');
-  }
+    // router.push('/order/review');
+    toast(renderMessage(detail.name), {
+      draggable: true,
+      draggableDirection: 'y',
+      draggablePercent: 80,
+      hideProgressBar: true,
+      autoClose: 4000,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      theme: 'dark'
+    });
+  };
 
   return (
     <>
@@ -92,6 +116,7 @@ const MenuDetail: NextPage = (props: any) => {
               <button className='bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md' type='button' onClick={handleAddToOrder}>
                 Add To Order
               </button>
+              <ToastContainer />
             </div>
           </div>
         </div>
