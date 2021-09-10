@@ -9,7 +9,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import { GiCoffeeMug as CoffeeCup } from 'react-icons/gi';
 
 import sanityClient from '../../sanityClient';
-import { useState } from 'react';
 import Head from 'next/head';
 import { useContext } from 'react';
 import CartContext from '../../state/cartContext';
