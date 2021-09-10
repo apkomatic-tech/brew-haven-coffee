@@ -36,7 +36,6 @@ const MenuDetail: NextPage = (props: any) => {
   const handleAddToOrder = (): void => {
     const orderItem = { ...detail, title: detail.name, quantity: 1 };
     dispatch({ type: 'ADD_ORDER', payload: orderItem });
-    // router.push('/order/review');
     toast(renderMessage(detail.name), {
       draggable: true,
       draggableDirection: 'y',
