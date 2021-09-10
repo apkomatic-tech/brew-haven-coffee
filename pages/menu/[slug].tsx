@@ -5,9 +5,10 @@ import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
+import { ToastContainer, toast } from 'react-toastify';
+import { GiCoffeeMug as CoffeeCup } from 'react-icons/gi';
 
 import sanityClient from '../../sanityClient';
-import { useState } from 'react';
 import Head from 'next/head';
 import { useContext } from 'react';
 import CartContext from '../../state/cartContext';
@@ -16,18 +17,34 @@ const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
   const imageProps = useNextSanityImage(sanityClient, detail.image)!;
-  const [qty, setQty] = useState(1);
   const { dispatch } = useContext(CartContext);
 
-  function handleQtyUpdate(e: any) {
-    setQty(e.target.value);
-  }
+  const renderMessage = (productName: string) => {
+    return (
+      <div className='flex justify-center items-center'>
+        <div className='text-4xl mr-4'>
+          <CoffeeCup />
+        </div>{' '}
+        <div>
+          Such success! You added <strong>{productName}</strong> to your order.
+        </div>
+      </div>
+    );
+  };
 
-  function handleAddToOrder() {
-    const orderItem = { ...detail, title: detail.name, quantity: Number(qty) };
+  const handleAddToOrder = (): void => {
+    const orderItem = { ...detail, title: detail.name, quantity: 1 };
     dispatch({ type: 'ADD_ORDER', payload: orderItem });
-    router.push('/order/review');
-  }
+    toast(renderMessage(detail.name), {
+      draggable: true,
+      draggableDirection: 'y',
+      draggablePercent: 80,
+      hideProgressBar: true,
+      autoClose: 4000,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      theme: 'dark'
+    });
+  };
 
   return (
     <>
@@ -64,34 +81,11 @@ const MenuDetail: NextPage = (props: any) => {
               </>
             )}
             <div className='flex mt-8 items-end'>
-              {/* Quantity */}
-              {/* <div className='flex flex-col mr-2'>
-                <label className='cursor-pointer mb-1' htmlFor='qty'>
-                  Quantity
-                </label>
-                <div className='inline-block relative w-18'>
-                  <select
-                    id='qty'
-                    onChange={handleQtyUpdate}
-                    value={qty}
-                    className='block appearance-none w-full bg-white border border-gray-800 hover:border-gray-900 px-4 py-2 pr-8 leading-tight focus:outline-none'>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </select>
-                  <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-                    <svg className='fill-current h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
-                      <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-                    </svg>
-                  </div>
-                </div>
-              </div> */}
               {/* Add To Order */}
               <button className='bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md' type='button' onClick={handleAddToOrder}>
                 Add To Order
               </button>
+              <ToastContainer />
             </div>
           </div>
         </div>
