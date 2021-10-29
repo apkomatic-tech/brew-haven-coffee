@@ -2,8 +2,6 @@ import groq from 'groq';
 import type { GetStaticProps, NextPage } from 'next';
 import client from '../../sanityClient';
 import MenuCard from '../../components/MenuCard';
-import { sampleDrinks } from '../../data/sampledrinks';
-import { useNextSanityImage } from 'next-sanity-image';
 import Head from 'next/head';
 
 const Menu: NextPage = (props: any) => {

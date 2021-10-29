@@ -15,7 +15,6 @@ function OrderLineItem(item: OrderItem) {
   const { id, title, image, quantity, price } = item;
   const imageProps = useNextSanityImage(sanityClient, image)!;
   const { dispatch } = useContext(CartContext);
-  console.log(item.slug);
   return (
     <div className={styles.OrderLineItem}>
       <Link href={`/menu/${item.slug}`}>

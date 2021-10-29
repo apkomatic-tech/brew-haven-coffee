@@ -12,6 +12,7 @@ import sanityClient from '../../sanityClient';
 import Head from 'next/head';
 import { useContext } from 'react';
 import CartContext from '../../state/cartContext';
+import Price from '../../components/shared/Price';
 
 const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
@@ -73,7 +74,11 @@ const MenuDetail: NextPage = (props: any) => {
           </div>
           <div>
             <h1 className='text-3xl font-bold mb-6'>{detail.name}</h1>
-            <p className='text-2xl mb-12'>${detail.price}</p>
+            <p className='text-2xl mb-12'>
+              {/* <sup>$</sup>
+              {Number(detail.price).toFixed(2)} */}
+              <Price priceValue={detail.price} />
+            </p>
             {detail.description && (
               <>
                 <h3 className='text-xl font-bold mb-6'>Description</h3>
