@@ -75,8 +75,6 @@ const MenuDetail: NextPage = (props: any) => {
           <div>
             <h1 className='text-3xl font-bold mb-6'>{detail.name}</h1>
             <p className='text-2xl mb-12'>
-              {/* <sup>$</sup>
-              {Number(detail.price).toFixed(2)} */}
               <Price priceValue={detail.price} />
             </p>
             {detail.description && (
