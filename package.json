@@ -15,6 +15,7 @@
     "@types/nprogress": "^0.2.0",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
+    "firebase": "^9.4.1",
     "framer-motion": "^4.1.17",
     "groq": "^2.15.0",
     "next": "11.1.0",
