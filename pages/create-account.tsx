@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import router from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import AuthContext from '../state/authContext';
 
@@ -27,7 +27,10 @@ const Login: NextPage = () => {
     handleSubmit,
     formState: { errors: formErrors }
   } = useForm<LoginForm>();
-  const onSubmit: SubmitHandler<LoginForm> = (data) => authCtx.signInUser(data);
+  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+    console.log(data);
+    authCtx.createUser(data);
+  };
 
   useEffect(() => {
     if (authCtx.state.user.accessToken) {
@@ -35,13 +38,15 @@ const Login: NextPage = () => {
     }
   }, [authCtx]);
 
+  console.log(formErrors);
+
   return (
     <>
       <Head>
-        <title>Doge Coffee | Login</title>
+        <title>Doge Coffee | Create Account</title>
       </Head>
       <div className='page-content wrapper-narrow'>
-        <h1 className='text-center text-2xl font-bold mb-8'>Sign in to your account</h1>
+        <h1 className='text-center text-2xl font-bold mb-8'>Create your account</h1>
         {authError && <div className='font-bold text-red-700 text-center mb-4 mx-auto'>{authError}</div>}
         <form className='block mx-auto max-w-sm' onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className='mb-3'>
@@ -72,12 +77,12 @@ const Login: NextPage = () => {
             {formErrors.password?.type === 'minLength' && <div className='font-bold text-sm text-red-700'>Password must contain at least 6 characters.</div>}
           </div>
           <button type='submit' className='block w-full bg-primarydark text-white p-2 rounded-md'>
-            Sign In
+            Create Account
           </button>
           <div className='mt-6 text-center'>
-            Don&apos;t have an account yet?{' '}
-            <Link href='/create-account'>
-              <a className='text-primary'>Register</a>
+            Already have an account?{' '}
+            <Link href='/login'>
+              <a className='text-primary'>Login</a>
             </Link>
           </div>
         </form>

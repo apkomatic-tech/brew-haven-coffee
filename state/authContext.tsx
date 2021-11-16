@@ -1,43 +1,55 @@
-import { createContext, useEffect, useReducer, useState } from 'react';
-import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { createContext, useEffect, useState } from 'react';
+import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { app } from '../getFirebaseApp';
+import router from 'next/router';
 
 type AuthContextProps = {
   state: {
     user: any;
-    error: any;
+    error: string;
   };
   signInUser: any;
   signOutUser: any;
+  createUser: any;
 };
 type AuthContextProviderProps = {
   children: React.ReactNode;
 };
+
+function getAuthErrorMessageFromCode(code: string) {
+  switch (code) {
+    case 'auth/user-not-found':
+      return 'Error: User Not Found.';
+    case 'auth/wrong-password':
+      return 'Error: Wrong Password.';
+    case 'auth/email-already-exists':
+    case 'auth/email-already-in-use':
+      return 'Error: Email Already Exists.';
+    default:
+      return 'Error: Unknown';
+  }
+}
+
 const AuthContext = createContext<AuthContextProps>({
-  state: { user: {}, error: {} },
+  state: { user: {}, error: '' },
   signInUser: () => {},
-  signOutUser: () => {}
+  signOutUser: () => {},
+  createUser: () => {}
 });
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [authState, setAuthState] = useState({ user: {}, error: {} });
+  const [authState, setAuthState] = useState({ user: {}, error: '' });
   const auth = getAuth(app);
 
   function signInUser({ email, password }: { email: string; password: string }) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential: UserCredential) => {
-        console.log('Sign in successful.');
-        // const user = userCredential.user
-        // setAuthState({
-        //   ...authState,
-        //   user,
-        //   error: null
-        // });
+        router.push('/account');
       })
       .catch((err) => {
         setAuthState({
           ...authState,
-          error: err
+          error: getAuthErrorMessageFromCode(err.code)
         });
       });
   }
@@ -46,13 +58,27 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     auth
       .signOut()
       .then(() => {
-        console.log('Sign out successful.');
+        router.push('/login');
       })
       .catch((err) => {
         console.error('Sign out failed.');
         setAuthState({
           ...authState,
-          error: err
+          error: getAuthErrorMessageFromCode(err.code)
+        });
+      });
+  }
+
+  function createUser({ email, password }: { email: string; password: string }) {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        router.push('/account');
+      })
+      .catch((err) => {
+        console.log(err.code);
+        setAuthState({
+          ...authState,
+          error: getAuthErrorMessageFromCode(err.code)
         });
       });
   }
@@ -64,20 +90,20 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         setAuthState({
           ...authState,
           user,
-          error: {}
+          error: ''
         });
       } else {
         console.log('user is signed out.');
         setAuthState({
           ...authState,
           user: {},
-          error: {}
+          error: ''
         });
       }
     });
   }, [auth]);
 
-  return <AuthContext.Provider value={{ state: authState, signInUser, signOutUser }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ state: authState, signInUser, signOutUser, createUser }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;
