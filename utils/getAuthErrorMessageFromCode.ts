@@ -1,11 +1,12 @@
+import { AuthErrorCodes } from '@firebase/auth';
+
 const getAuthErrorMessageFromCode = (code: string) => {
   switch (code) {
-    case 'auth/user-not-found':
+    case AuthErrorCodes.USER_DELETED:
       return 'Error: User Not Found.';
-    case 'auth/wrong-password':
+    case AuthErrorCodes.INVALID_PASSWORD:
       return 'Error: Wrong Password.';
-    case 'auth/email-already-exists':
-    case 'auth/email-already-in-use':
+    case AuthErrorCodes.EMAIL_EXISTS:
       return 'Error: Email Already Exists.';
     default:
       return 'Error: Unknown';

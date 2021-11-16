@@ -8,15 +8,13 @@ import AuthForm from '../components/AuthForm';
 
 const Login: NextPage = () => {
   const authCtx = useContext(AuthContext);
-  const {
-    state: { user, error: authError }
-  } = authCtx;
+  const { authUser, authError, signIn } = authCtx;
 
   useEffect(() => {
-    if (user.accessToken) {
+    if (authUser?.email) {
       router.push('/account');
     }
-  }, [user]);
+  }, [authUser]);
 
   return (
     <>
@@ -29,7 +27,7 @@ const Login: NextPage = () => {
           submitButtonText='Sign In'
           authError={authError}
           handleFormSubmit={(userdata) => {
-            authCtx.signInUser(userdata);
+            signIn(userdata);
           }}
         />
 

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@firebase/auth-types": "^0.11.0",
     "@hookform/resolvers": "^2.8.0",
     "@sanity/client": "^2.16.0",
     "@svgr/webpack": "^5.5.0",

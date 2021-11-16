@@ -8,15 +8,13 @@ import AuthForm from '../components/AuthForm';
 
 const Login: NextPage = () => {
   const authCtx = useContext(AuthContext);
-  const {
-    state: { user, error: authError }
-  } = authCtx;
+  const { authUser, authError } = authCtx;
 
   useEffect(() => {
-    if (authCtx.state.user.accessToken) {
+    if (authUser?.email) {
       router.push('/account');
     }
-  }, [authCtx]);
+  }, [authUser]);
 
   return (
     <>

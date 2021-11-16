@@ -7,13 +7,14 @@ import CartContext from '../state/cartContext';
 
 function HeaderCartLogin() {
   const authCtx = useContext(AuthContext);
+  const { authUser } = authCtx;
   const {
     state: { count: orderCount }
   } = useContext(CartContext);
 
   return (
     <div className='grid grid-flow-col-dense gap-2 items-center text-2xl ml-2 md:ml-6 md:text-3xl lg:ml-16'>
-      <Link href={authCtx.state.user.accessToken ? '/account' : '/login'}>
+      <Link href={authUser?.email ? '/account' : '/login'}>
         <a>
           <UserIcon />
         </a>

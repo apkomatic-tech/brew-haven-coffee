@@ -1,25 +1,28 @@
 import { createContext, useEffect, useState } from 'react';
 import router, { Router } from 'next/router';
-import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserProfile } from 'firebase/auth';
 
 import { app } from '../getFirebaseApp';
 import getAuthErrorMessageFromCode from '../utils/getAuthErrorMessageFromCode';
+import { User, UserCredential } from '@firebase/auth-types';
+
+// initialize auth
+const auth = getAuth(app);
 
 // create context
 type AuthContextProps = {
-  state: {
-    user: any;
-    error: string;
-  };
-  signInUser: any;
-  signOutUser: any;
+  authUser: User | null;
+  authError: string;
+  signIn: any;
+  signOut: any;
   createUser: any;
 };
 
 const AuthContext = createContext<AuthContextProps>({
-  state: { user: {}, error: '' },
-  signInUser: () => {},
-  signOutUser: () => {},
+  authUser: null,
+  authError: '',
+  signIn: () => {},
+  signOut: () => {},
   createUser: () => {}
 });
 
@@ -29,34 +32,27 @@ type AuthContextProviderProps = {
 };
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [authState, setAuthState] = useState({ user: {}, error: '' });
-  const auth = getAuth(app);
+  const [user, setUser] = useState<any>(null);
+  const [authError, setAuthError] = useState('');
 
-  function signInUser({ email, password }: { email: string; password: string }) {
+  function signIn({ email, password }: { email: string; password: string }) {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         router.push('/account');
       })
       .catch((err) => {
-        setAuthState({
-          ...authState,
-          error: getAuthErrorMessageFromCode(err.code)
-        });
+        setAuthError(getAuthErrorMessageFromCode(err.code));
       });
   }
 
-  function signOutUser() {
+  function signOut() {
     auth
       .signOut()
       .then(() => {
         router.push('/login');
       })
       .catch((err) => {
-        console.error('Sign out failed.');
-        setAuthState({
-          ...authState,
-          error: getAuthErrorMessageFromCode(err.code)
-        });
+        setAuthError(getAuthErrorMessageFromCode(err.code));
       });
   }
 
@@ -66,38 +62,24 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         router.push('/account');
       })
       .catch((err) => {
-        setAuthState({
-          ...authState,
-          error: getAuthErrorMessageFromCode(err.code)
-        });
+        setAuthError(getAuthErrorMessageFromCode(err.code));
       });
   }
 
   useEffect(() => {
     Router.events.on('routeChangeStart', () => {
-      setAuthState({
-        ...authState,
-        error: ''
-      });
+      setAuthError('');
     });
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setAuthState({
-          ...authState,
-          user,
-          error: ''
-        });
+        setUser(user);
       } else {
-        setAuthState({
-          ...authState,
-          user: {},
-          error: ''
-        });
+        setUser(null);
       }
     });
   }, []);
 
-  return <AuthContext.Provider value={{ state: authState, signInUser, signOutUser, createUser }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ authUser: user, authError, signIn, signOut, createUser }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;

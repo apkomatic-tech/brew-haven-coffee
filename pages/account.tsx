@@ -1,18 +1,17 @@
 import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
+import router from 'next/router';
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
 import AuthContext from '../state/authContext';
 
 const Account: NextPage = () => {
-  const router = useRouter();
-  const authCtx = useContext(AuthContext);
+  const { authUser, signOut } = useContext(AuthContext);
 
   useEffect(() => {
-    if (!authCtx.state.user.accessToken) {
+    if (!authUser?.email) {
       router.push('/login');
     }
-  }, [authCtx.state.user.accessToken, router]);
+  }, [authUser]);
 
   return (
     <>
@@ -20,9 +19,9 @@ const Account: NextPage = () => {
         <title>Doge Coffee | User Dashboard</title>
       </Head>
       <div className='page-content wrapper-narrow'>
-        <h1 className='text-lg font-bold text-center'>Hello, {authCtx.state.user.email}!</h1>
+        <h1 className='text-lg font-bold text-center'>Hello, {authUser?.email}!</h1>
         <div className='text-center mt-4'>
-          <button type='button' className='p-2 leading-none bg-red-600 text-white' onClick={() => authCtx.signOutUser()}>
+          <button type='button' className='p-2 leading-none bg-red-600 text-white' onClick={() => signOut()}>
             Logout
           </button>
         </div>
