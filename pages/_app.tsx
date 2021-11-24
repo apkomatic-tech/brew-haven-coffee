@@ -4,6 +4,7 @@ import NProgress from 'nprogress';
 
 import Layout from '../components/Layout';
 import { CartProvider } from '../state/cartContext';
+import { AuthContextProvider } from '../state/authContext';
 
 import '../styles/index.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,13 +23,17 @@ Router.events.on('routeChangeError', () => {
   NProgress.remove();
 });
 
+// const analytics = getAnalytics(app);
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <CartProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </CartProvider>
+    <AuthContextProvider>
+      <CartProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </CartProvider>
+    </AuthContextProvider>
   );
 }
 export default MyApp;

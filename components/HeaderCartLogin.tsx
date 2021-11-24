@@ -2,16 +2,19 @@ import Link from 'next/link';
 import React from 'react';
 import { useContext } from 'react';
 import { HiOutlineShoppingCart as ShoppingCartIcon, HiOutlineUser as UserIcon } from 'react-icons/hi';
+import AuthContext from '../state/authContext';
 import CartContext from '../state/cartContext';
 
 function HeaderCartLogin() {
+  const authCtx = useContext(AuthContext);
+  const { authUser } = authCtx;
   const {
     state: { count: orderCount }
   } = useContext(CartContext);
 
   return (
     <div className='grid grid-flow-col-dense gap-2 items-center text-2xl ml-2 md:ml-6 md:text-3xl lg:ml-16'>
-      <Link href='/login'>
+      <Link href={authUser?.email ? '/account' : '/login'}>
         <a>
           <UserIcon />
         </a>
