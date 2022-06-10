@@ -1,7 +1,9 @@
 import { Router } from 'next/router';
 import type { AppProps } from 'next/app';
 import NProgress from 'nprogress';
+import { Provider } from 'react-redux';
 
+import { store } from '../app/store';
 import Layout from '../components/Layout';
 import { CartProvider } from '../state/cartContext';
 import { AuthContextProvider } from '../state/authContext';
@@ -9,6 +11,7 @@ import { AuthContextProvider } from '../state/authContext';
 import '../styles/index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/nprogress-custom.css';
+import Page from '../components/Page';
 
 NProgress.configure({
   showSpinner: false
@@ -27,13 +30,17 @@ Router.events.on('routeChangeError', () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <AuthContextProvider>
-      <CartProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </CartProvider>
-    </AuthContextProvider>
+    <Provider store={store}>
+      <AuthContextProvider>
+        <CartProvider>
+          <Page>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </Page>
+        </CartProvider>
+      </AuthContextProvider>
+    </Provider>
   );
 }
 export default MyApp;
