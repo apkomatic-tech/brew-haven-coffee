@@ -1,9 +1,11 @@
-import React, { useReducer, useState } from 'react';
+import React, { useContext, useReducer, useState } from 'react';
 import { useEffect } from 'react';
 import { createContext } from 'react';
 import { useLocalStorage } from 'react-use';
 
 import { OrderItem } from '../types/OrderItem';
+import { CartFirebase } from '../utils/firebase/CartFirebase';
+import AuthContext from './authContext';
 
 type CartProviderProps = {
   children: React.ReactNode;
@@ -98,12 +100,17 @@ const CartContext = createContext<{
 }>({ state: initialState, dispatch: () => {} });
 
 const CartProvider = ({ children }: CartProviderProps) => {
-  const [storageState, setStorageState] = useLocalStorage<CartState>('order', initialState);
-  const [state, dispatch] = useReducer(cartReducer, storageState || initialState);
+  // const [storageState, setStorageState] = useLocalStorage<CartState>('order', initialState);
+  const { authUser } = useContext(AuthContext);
+  const [state, dispatch] = useReducer(cartReducer, initialState);
 
   useEffect(() => {
-    setStorageState(state);
-  }, [state, setStorageState]);
+    if (authUser) {
+      CartFirebase.getCart(authUser.uid).then((data) => {
+        console.log(data);
+      });
+    }
+  }, [state, authUser]);
 
   useEffect(() => {
     dispatch({ type: 'CALCULATE_SUBTOTAL' });

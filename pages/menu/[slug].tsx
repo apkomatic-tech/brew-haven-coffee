@@ -5,32 +5,21 @@ import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
-import { GiCoffeeMug as CoffeeCup } from 'react-icons/gi';
+import { AiOutlineWarning as WarningIcon } from 'react-icons/ai';
 
 import sanityClient from '../../sanityClient';
 import Head from 'next/head';
 import { useContext } from 'react';
 import CartContext from '../../state/cartContext';
 import Price from '../../components/shared/Price';
+import AuthContext from '../../state/authContext';
 
 const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
   const imageProps = useNextSanityImage(sanityClient, detail.image)!;
   const { dispatch } = useContext(CartContext);
-
-  const renderMessage = (productName: string) => {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="text-4xl mr-4">
-          <CoffeeCup />
-        </div>{' '}
-        <div>
-          Such success! You added <strong>{productName}</strong> to your order.
-        </div>
-      </div>
-    );
-  };
+  const { authUser } = useContext(AuthContext);
 
   const handleAddToOrder = (): void => {
     const orderItem = { ...detail, title: detail.name, quantity: 1 };
@@ -76,9 +65,17 @@ const MenuDetail: NextPage = (props: any) => {
             )}
             <div className="flex mt-8 items-end">
               {/* Add To Order */}
-              <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
-                Add To Order
-              </button>
+
+              {authUser ? (
+                <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
+                  Add To Order
+                </button>
+              ) : (
+                <div className="p-2 border-2 border-yellow-800 bg-yellow-50 flex items-center">
+                  <WarningIcon className="w-6 h-6 text-yellow-800" />
+                  <p className="ml-2 text-yellow-800">You need to be signed in to place orders.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
