@@ -8,16 +8,10 @@ type Data = {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  if (req.method === 'GET') {
-    res.status(200).json({
-      isSuccess: true,
-      result: []
-    });
-  }
   if (req.method === 'POST') {
-    const { quantity, productid } = req.body;
+    const { items, total } = req.body;
 
-    if (!quantity || !productid) {
+    if (!items?.length || !total) {
       res.status(400).json({
         isSuccess: false,
         errors: ['Missing parameters']
@@ -26,13 +20,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
       return;
     }
 
-    res.status(200).json({ isSuccess: true, result: { message: 'success!' } });
+    res.status(200).json({ isSuccess: true, result: { data: req.body, message: 'success!' } });
     res.end();
   } else {
-    console.error('Invalid request method. Aborting...');
+    console.error('Invalid order request');
     res.status(400).json({
       isSuccess: false,
-      errors: ['Invalid request method.']
+      errors: ['Invalid request method provided.']
     });
     res.end();
   }

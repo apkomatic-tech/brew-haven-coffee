@@ -21,19 +21,19 @@ const Login: NextPage = () => {
       <Head>
         <title>Doge Coffee | Create Account</title>
       </Head>
-      <div className='page-content wrapper-narrow'>
-        <h1 className='text-center text-2xl font-bold mb-8'>Create Account</h1>
+      <div className="page-content wrapper-narrow">
+        <h1 className="text-center text-2xl font-bold mb-4">Create Account</h1>
         <AuthForm
-          submitButtonText='Create Account'
+          submitButtonText="Create Account"
           authError={authError}
           handleFormSubmit={(userData) => {
             authCtx.createUser(userData);
           }}
         />
-        <div className='mt-6 text-center'>
+        <div className="mt-6 text-center">
           Already have an account?{' '}
-          <Link href='/login'>
-            <a className='text-primary'>Login</a>
+          <Link href="/login">
+            <a className="text-primary">Login</a>
           </Link>
         </div>
       </div>

@@ -21,20 +21,20 @@ const Login: NextPage = () => {
       <Head>
         <title>Doge Coffee | Login</title>
       </Head>
-      <div className='page-content wrapper-narrow'>
-        <h1 className='text-center text-2xl font-bold mb-8'>Sign in to your account</h1>
+      <div className="page-content wrapper-narrow">
+        <h1 className="text-center text-2xl font-bold mb-4">Sign In</h1>
         <AuthForm
-          submitButtonText='Sign In'
+          submitButtonText="Sign In"
           authError={authError}
           handleFormSubmit={(userdata) => {
             signIn(userdata);
           }}
         />
 
-        <div className='mt-6 text-center'>
+        <div className="mt-6 text-center">
           Don&apos;t have an account yet?{' '}
-          <Link href='/create-account'>
-            <a className='text-primary'>Register</a>
+          <Link href="/create-account">
+            <a className="text-primary">Register</a>
           </Link>
         </div>
       </div>

@@ -27,43 +27,43 @@ const AuthForm: React.FC<AuthFormProps> = ({ submitButtonText, authError, handle
 
   return (
     <>
-      <form className='block mx-auto max-w-md bg-purple-50 p-8 shadow-md drop-shadow-md' onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form className="block mx-auto max-w-md p-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         {authError && (
-          <div className='p-4 bg-red-200 text-center mb-4 text-red-900 flex items-center text-sm border-l-4 border-red-800'>
-            <span className='mr-2 text-xl'>
+          <div className="p-4 bg-red-200 text-center mb-4 text-red-900 flex items-center text-sm border-l-4 border-red-800">
+            <span className="mr-2 text-xl">
               <BiErrorCircle />
             </span>
             <span>{authError}</span>
           </div>
         )}
-        <div className='mb-3'>
-          <label htmlFor='email' className='mb-1 font-bold inline-block text-sm text-gray-600 cursor-pointer'>
+        <div className="mb-3">
+          <label htmlFor="email" className="mb-1 font-bold inline-block text-sm text-gray-600 cursor-pointer">
             Email Address
           </label>
           <input
             {...register('email', { required: true, pattern: EMAIL_REGX })}
-            id='email'
-            type='email'
-            autoComplete='false'
+            id="email"
+            type="email"
+            autoComplete="false"
             className={combineClasses('rounded-md border border-gray-400 bg-white block w-full p-2', Boolean(formErrors.email) ? 'border-red-700' : false)}
           />
-          {formErrors.email?.type === 'required' && <div className='font-bold text-sm text-red-700'>Email is required.</div>}
-          {formErrors.email?.type === 'pattern' && <div className='font-bold text-sm text-red-700'>Incorrect email.</div>}
+          {formErrors.email?.type === 'required' && <div className="font-bold text-sm text-red-700">Email is required.</div>}
+          {formErrors.email?.type === 'pattern' && <div className="font-bold text-sm text-red-700">Incorrect email.</div>}
         </div>
-        <div className='mb-6'>
-          <label htmlFor='password' className='mb-1 font-bold inline-block text-sm text-gray-600 cursor-pointer'>
+        <div className="mb-6">
+          <label htmlFor="password" className="mb-1 font-bold inline-block text-sm text-gray-600 cursor-pointer">
             Password
           </label>
           <input
             {...register('password', { required: true, minLength: 6 })}
-            id='password'
-            type='password'
+            id="password"
+            type="password"
             className={combineClasses('rounded-md border border-gray-400 bg-white block w-full p-2', Boolean(formErrors.password) ? 'border-red-700' : false)}
           />
-          {formErrors.password?.type === 'required' && <div className='font-bold text-sm text-red-700'>Password is required.</div>}
-          {formErrors.password?.type === 'minLength' && <div className='font-bold text-sm text-red-700'>Password must contain at least 6 characters.</div>}
+          {formErrors.password?.type === 'required' && <div className="font-bold text-sm text-red-700">Password is required.</div>}
+          {formErrors.password?.type === 'minLength' && <div className="font-bold text-sm text-red-700">Password must contain at least 6 characters.</div>}
         </div>
-        <button type='submit' className='block w-full bg-primarydark text-white p-2 rounded-md'>
+        <button type="submit" className="block w-full bg-primarydark text-white p-2 rounded-md">
           {submitButtonText}
         </button>
       </form>

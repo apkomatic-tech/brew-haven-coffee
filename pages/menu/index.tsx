@@ -12,8 +12,6 @@ const Menu: NextPage = (props: any) => {
   function renderDrinks(drinks: any[]) {
     return drinks.map((item: any) => {
       const { _id, name, image, price } = item;
-      console.log(item);
-      console.log(_id);
       const drinkData = {
         id: _id,
         title: name,
@@ -31,17 +29,17 @@ const Menu: NextPage = (props: any) => {
         <title>Doge Coffee | Menu</title>
       </Head>
       <div className="page-content wrapper">
-        <h1 className="page-title">Menu</h1>
+        <h1 className="text-3xl font-bold mb-12 pb-4 border-b">Menu</h1>
 
         {coldDrinks.length > 0 && (
           <>
-            <h2 className="font-bold mb-6 text-xl">Cold Brews</h2>
+            <h2 className="font-bold mb-6 text-xl">Cold Drinks</h2>
             <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 mb-12">{renderDrinks(coldDrinks)}</div>
           </>
         )}
         {hotDrinks.length > 0 && (
           <>
-            <h2 className="font-bold mb-6 text-xl">Hot Coffee</h2>
+            <h2 className="font-bold mb-6 text-xl">Hot Drinks</h2>
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 mb-12">{renderDrinks(hotDrinks)}</div>
           </>
         )}

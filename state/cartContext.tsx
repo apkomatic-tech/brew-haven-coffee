@@ -17,7 +17,8 @@ export type CartAction =
   | { type: 'ADD_ORDER'; payload: OrderItem }
   | { type: 'REMOVE_ORDER'; payload: number | string }
   | { type: 'CALCULATE_SUBTOTAL' }
-  | { type: 'GET_ITEM_COUNT' };
+  | { type: 'GET_ITEM_COUNT' }
+  | { type: 'CLEAR_ORDER' };
 
 const initialState = {
   items: [],
@@ -78,6 +79,13 @@ const cartReducer = (state: CartState, action: CartAction) => {
           acc += item.quantity;
           return acc;
         }, 0)
+      };
+    case 'CLEAR_ORDER':
+      return {
+        ...state,
+        subtotal: 0,
+        items: [],
+        count: 0
       };
     default:
       return { ...state };
