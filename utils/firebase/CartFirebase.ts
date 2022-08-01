@@ -12,22 +12,12 @@ interface Cart {
   subtotal: number;
 }
 export class CartFirebase {
-  static async getCart(userID: string) {
+  static async setCustomerCart(userID: string, newCart: Cart) {
     const docRef = doc(db, 'cart', userID);
 
     try {
-      const cartDoc = await getDoc(docRef);
-      if (cartDoc.exists()) {
-        return cartDoc.data();
-      } else {
-        // if no cart exists for user, create new empty cart
-        await setDoc(docRef, {
-          items: [],
-          count: 0,
-          subtotal: 0
-        });
-        return (await getDoc(docRef)).data();
-      }
+      await setDoc(docRef, newCart);
+      return (await getDoc(docRef)).data();
     } catch (error) {}
   }
 }

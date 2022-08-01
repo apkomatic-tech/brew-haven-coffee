@@ -15,12 +15,14 @@ type CartState = {
   count: number;
   subtotal: number;
 };
+
 export type CartAction =
   | { type: 'ADD_ORDER'; payload: OrderItem }
   | { type: 'REMOVE_ORDER'; payload: number | string }
   | { type: 'CALCULATE_SUBTOTAL' }
   | { type: 'GET_ITEM_COUNT' }
-  | { type: 'CLEAR_ORDER' };
+  | { type: 'CLEAR_CART' }
+  | { type: 'SET_CART'; payload: CartState };
 
 const initialState = {
   items: [],
@@ -28,6 +30,7 @@ const initialState = {
   subtotal: 0
 };
 
+// initialize reducer with actions
 const cartReducer = (state: CartState, action: CartAction) => {
   switch (action.type) {
     case 'ADD_ORDER':
@@ -82,7 +85,7 @@ const cartReducer = (state: CartState, action: CartAction) => {
           return acc;
         }, 0)
       };
-    case 'CLEAR_ORDER':
+    case 'CLEAR_CART':
       return {
         ...state,
         subtotal: 0,
@@ -102,20 +105,30 @@ const CartContext = createContext<{
 const CartProvider = ({ children }: CartProviderProps) => {
   // const [storageState, setStorageState] = useLocalStorage<CartState>('order', initialState);
   const { authUser } = useContext(AuthContext);
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [state, dispatch] = useReducer(cartReducer, () => {
+    // TODO: populate cart from firebase
+  });
 
-  useEffect(() => {
-    if (authUser) {
-      CartFirebase.getCart(authUser.uid).then((data) => {
-        console.log(data);
-      });
-    }
-  }, [state, authUser]);
+  // useEffect(() => {
+  //   if (authUser) {
+  //     CartFirebase.setCustomerCart(authUser.uid, state);
+  //   }
+  // }, [state, authUser]);
 
-  useEffect(() => {
-    dispatch({ type: 'CALCULATE_SUBTOTAL' });
-    dispatch({ type: 'GET_ITEM_COUNT' });
-  }, [state.items]);
+  // useEffect(() => {
+  //   if (authUser) {
+  //     CartFirebase.updateCustomerCart(authUser.uid, state);
+  //   }
+  // }, [authUser, state]);
+
+  // useEffect(() => {
+  //   if (!authUser) dispatch({ type: 'CLEAR_CART' });
+  // }, [authUser]);
+
+  // useEffect(() => {
+  //   dispatch({ type: 'CALCULATE_SUBTOTAL' });
+  //   dispatch({ type: 'GET_ITEM_COUNT' });
+  // }, [state.items]);
 
   return <CartContext.Provider value={{ state, dispatch }}>{children}</CartContext.Provider>;
 };
