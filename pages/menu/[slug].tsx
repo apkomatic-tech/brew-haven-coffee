@@ -18,12 +18,14 @@ const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
   const imageProps = useNextSanityImage(sanityClient, detail.image)!;
-  const { dispatch } = useContext(CartContext);
+  const { addToCart } = useContext(CartContext);
   const { authUser } = useContext(AuthContext);
 
   const handleAddToOrder = (): void => {
     const orderItem = { ...detail, title: detail.name, quantity: 1 };
-    dispatch({ type: 'ADD_ORDER', payload: orderItem });
+    const addToCartFn = addToCart!;
+    // dispatch({ type: 'ADD_ORDER', payload: orderItem });
+    addToCartFn(orderItem)!;
     router.push('/order/review');
   };
 

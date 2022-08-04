@@ -14,7 +14,7 @@ import styles from './OrderLineItem.module.css';
 function OrderLineItem(item: OrderItem) {
   const { id, title, image, quantity, price } = item;
   const imageProps = useNextSanityImage(sanityClient, image)!;
-  const { dispatch } = useContext(CartContext);
+  // const { dispatch } = useContext(CartContext);
   return (
     <div className={styles.OrderLineItem}>
       <Link href={`/menu/${item.slug}`}>
@@ -22,13 +22,18 @@ function OrderLineItem(item: OrderItem) {
           <Image {...imageProps} width={167} height={167} alt={title} />
         </a>
       </Link>
-      <div className='ml-4 block flex-grow'>
-        <h3 className='text-base md:text-lg font-bold flex justify-between mb-1 text-black'>
+      <div className="ml-4 block flex-grow">
+        <h3 className="text-base md:text-lg font-bold flex justify-between mb-1 text-black">
           <span>{title}</span> <span>${price.toFixed(2)}</span>
         </h3>
         <p>Quantity: {quantity}</p>
       </div>
-      <button className={styles.OrderLineItemRemoveBtn} type='button' onClick={() => dispatch({ type: 'REMOVE_ORDER', payload: id })}>
+      <button
+        className={styles.OrderLineItemRemoveBtn}
+        type="button"
+        onClick={() => {
+          // TODO: call removeFromItem method in CartContext
+        }}>
         <DeleteIcon style={{ marginRight: '0.15rem' }} />
         Remove
       </button>

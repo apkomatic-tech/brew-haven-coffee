@@ -8,8 +8,8 @@ import OrderLineItem from '../../components/OrderLineItem';
 import styles from './reviewOrder.module.css';
 
 const Order: NextPage = () => {
-  const { state } = useContext(CartContext);
-  const { items: orderItems, subtotal } = state;
+  const { cart } = useContext(CartContext);
+  const { items: orderItems, subtotal } = cart;
 
   return (
     <div>
@@ -39,7 +39,7 @@ const Order: NextPage = () => {
                   <h3 className="font-bold text-xl">Subtotal</h3>
                   <p className="text-gray-600">Taxes will be calculated at checkout</p>
                 </div>
-                <div className="font-bold text-xl">${subtotal}</div>
+                <div className="font-bold text-xl">${subtotal.toFixed(2)}</div>
               </div>
               <Link href="/order/payment">
                 <a className="font-bold rounded-sm bg-primary text-white px-3 py-3 text-center w-full block opacity-100 hover:opacity-90 transition transition-opacity md:ml-auto md:w-72">

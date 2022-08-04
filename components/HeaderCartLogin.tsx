@@ -9,7 +9,7 @@ function HeaderCartLogin() {
   const authCtx = useContext(AuthContext);
   const { authUser } = authCtx;
   const {
-    state: { count: orderCount }
+    cart: { count: orderCount }
   } = useContext(CartContext);
 
   return (

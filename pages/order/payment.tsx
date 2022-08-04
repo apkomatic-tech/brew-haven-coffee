@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -43,13 +43,15 @@ const Payment: NextPage = () => {
     resolver: yupResolver(schema)
   });
   const [paymentError, setPaymentError] = useState<null | string>(null);
-  const { state, dispatch } = useContext(CartContext);
-  const { items: orderItems } = state;
+  const { cart } = useContext(CartContext);
+  const { items: orderItems } = cart;
   const serviceFee: number = 0.1;
+  const orderSubtotal = cart.subtotal.toFixed(2);
+  const orderTotal = useMemo(() => (cart.subtotal + cart.subtotal * serviceFee).toFixed(2), [cart.subtotal]);
 
   function processOrder(customerData: IFormData) {
     const orderData = {
-      total: state.subtotal + state.subtotal * serviceFee,
+      total: orderTotal,
       items: orderItems
     };
 
@@ -73,7 +75,7 @@ const Payment: NextPage = () => {
         }
         setPaymentError(null);
         // on succesfull order, we want to reset cart
-        dispatch({ type: 'CLEAR_ORDER' });
+        // TODO: create and call clear cart method in cartContext
         // TODO: create order confirmation page
         router.push('/menu');
       })
@@ -171,17 +173,23 @@ const Payment: NextPage = () => {
               <h3 className="text-xl mb-7 font-bold">Order summary</h3>
               <div className={styles.summaryBlock}>
                 {orderItems.map((item: OrderItem) => (
-                  <OrderSummaryItem key={item.id} item={item} removeFromOrder={() => dispatch({ type: 'REMOVE_ORDER', payload: item.id })} />
+                  <OrderSummaryItem
+                    key={item.id}
+                    item={item}
+                    removeFromOrder={() => {
+                      // TODO: remove from cart
+                    }}
+                  />
                 ))}
                 <div className="p-6">
                   <div className="flex justify-between py-3">
-                    Subtotal <span>${state.subtotal.toFixed(2)}</span>
+                    Subtotal <span>${orderSubtotal}</span>
                   </div>
                   <div className="flex justify-between py-3">
                     Service Fee <span>{(serviceFee * 100).toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between font-bold border-t borer-gray-300 text-lg py-4">
-                    Total <span>${(state.subtotal + state.subtotal * serviceFee).toFixed(2)}</span>
+                    Total <span>${orderTotal}</span>
                   </div>
                 </div>
 
