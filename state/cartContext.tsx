@@ -8,6 +8,7 @@ import { OrderItem } from '../types/OrderItem';
 import { CartService } from '../service/cart.service';
 import AuthContext from './authContext';
 import { app } from '../getFirebaseApp';
+import { calculateSubtotalFromItems, getNumberOfItemsInCart } from '../utils/cart.utils';
 
 const db = getFirestore(app);
 
@@ -20,31 +21,13 @@ type CartState = {
   subtotal: number;
 };
 
-export type CartAction =
-  | { type: 'ADD_ORDER'; payload: OrderItem }
-  | { type: 'REMOVE_ORDER'; payload: number | string }
-  | { type: 'CALCULATE_SUBTOTAL' }
-  | { type: 'GET_ITEM_COUNT' }
-  | { type: 'CLEAR_CART' }
-  | { type: 'SET_CART'; payload: CartState };
-
-function calculateSubtotalFromItems(items: OrderItem[]) {
-  return Number(
-    items
-      .reduce((acc: number, item: OrderItem) => {
-        acc += item.price * item.quantity;
-        return acc;
-      }, 0)
-      .toFixed(2)
-  );
-}
-
-function getNumberOfItemsInCart(items: OrderItem[]) {
-  return items.reduce((acc: number, item: OrderItem) => {
-    acc += item.quantity;
-    return acc;
-  }, 0);
-}
+// export type CartAction =
+//   | { type: 'ADD_ORDER'; payload: OrderItem }
+//   | { type: 'REMOVE_ORDER'; payload: number | string }
+//   | { type: 'CALCULATE_SUBTOTAL' }
+//   | { type: 'GET_ITEM_COUNT' }
+//   | { type: 'CLEAR_CART' }
+//   | { type: 'SET_CART'; payload: CartState };
 
 // initialize reducer with actions
 // const cartReducer = (state: CartState, action: CartAction) => {
@@ -126,10 +109,12 @@ const CartContext = createContext<{
 }>({ cart: initialCartState });
 
 const CartProvider = ({ children }: CartProviderProps) => {
-  // const [storageState, setStorageState] = useLocalStorage<CartState>('order', initialState);
+  const [cartFromLocalStorage, setCartFromLocalStorage] = useLocalStorage<CartState>('order', initialCartState);
   const { authUser } = useContext(AuthContext);
-  // const [state, dispatch] = useReducer(cartReducer, initialState);
-  const [cart, setCart] = useState<CartState>(initialCartState);
+  const [cart, setCart] = useState<CartState>(() => {
+    if (!authUser) return initialCartState;
+    return cartFromLocalStorage ?? initialCartState;
+  });
 
   useEffect(() => {
     let cartSubscribe = () => {};
@@ -156,6 +141,13 @@ const CartProvider = ({ children }: CartProviderProps) => {
     return () => cartSubscribe();
   }, [authUser]);
 
+  // persist anonymous cart in localStorage
+  useEffect(() => {
+    if (!authUser) {
+      setCartFromLocalStorage(cart);
+    }
+  }, [authUser, cart, setCartFromLocalStorage]);
+
   const addToCart = async (orderItem: OrderItem) => {
     const currentOrderItem = cart.items.find((item: OrderItem) => item.id === orderItem.id);
     let updatedCart = { ...cart };
@@ -174,6 +166,7 @@ const CartProvider = ({ children }: CartProviderProps) => {
       updatedCart.items.push(orderItem);
     }
 
+    // if signed in, store cart in db
     if (authUser) {
       CartService.updateCart(authUser.uid, {
         ...updatedCart,
@@ -181,6 +174,13 @@ const CartProvider = ({ children }: CartProviderProps) => {
         count: getNumberOfItemsInCart(updatedCart.items)
       }).then((cart) => {
         console.log('update cart operation completed. New Cart', cart);
+      });
+    } else {
+      // otherwise, store directly in client state
+      setCart({
+        ...updatedCart,
+        subtotal: calculateSubtotalFromItems(updatedCart.items),
+        count: getNumberOfItemsInCart(updatedCart.items)
       });
     }
   };

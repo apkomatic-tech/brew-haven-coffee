@@ -68,7 +68,11 @@ const MenuDetail: NextPage = (props: any) => {
             <div className="flex mt-8 items-end">
               {/* Add To Order */}
 
-              {authUser ? (
+              <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
+                Add To Order
+              </button>
+
+              {/* {authUser ? (
                 <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
                   Add To Order
                 </button>
@@ -77,7 +81,7 @@ const MenuDetail: NextPage = (props: any) => {
                   <WarningIcon className="w-6 h-6 text-yellow-800" />
                   <p className="ml-2 text-yellow-800">You need to be signed in to place orders.</p>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
