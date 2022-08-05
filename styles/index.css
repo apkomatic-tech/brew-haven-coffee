@@ -15,6 +15,10 @@
   }
 }
 
+body {
+  font-family: 'Inter', Arial, Helvetica, sans-serif
+}
+
 .page-content {
   @apply mt-20 mb-16;
 }

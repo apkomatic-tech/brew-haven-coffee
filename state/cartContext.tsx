@@ -9,6 +9,7 @@ import { CartService } from '../service/cart.service';
 import AuthContext from './authContext';
 import { app } from '../getFirebaseApp';
 import { calculateSubtotalFromItems, getNumberOfItemsInCart } from '../utils/cart.utils';
+import { User } from '@firebase/auth-types';
 
 const db = getFirestore(app);
 
@@ -86,12 +87,29 @@ const CartProvider = ({ children }: CartProviderProps) => {
     }
   }, [authUser, cart, setCartFromLocalStorage]);
 
+  const runUpdateCart = async (orderItems: OrderItem[], user?: User) => {
+    const updatedCart = {
+      items: orderItems,
+      subtotal: calculateSubtotalFromItems(orderItems),
+      count: getNumberOfItemsInCart(orderItems)
+    };
+    // if signed in, store cart in db
+    if (user) {
+      CartService.updateCart(user.uid, updatedCart).then((cart) => {
+        console.log('update cart operation completed. New Cart', cart);
+      });
+    } else {
+      // otherwise, store directly in client state
+      setCart(updatedCart);
+    }
+  };
+
   const addToCart = async (orderItem: OrderItem) => {
     const currentOrderItem = cart.items.find((item: OrderItem) => item.id === orderItem.id);
-    let updatedCart = { ...cart };
+    let productItems: OrderItem[] = [];
     if (currentOrderItem) {
       const updateIndex = cart.items.indexOf(currentOrderItem);
-      const updatedItems = [
+      productItems = [
         ...cart.items.slice(0, updateIndex),
         {
           ...currentOrderItem,
@@ -99,31 +117,32 @@ const CartProvider = ({ children }: CartProviderProps) => {
         },
         ...cart.items.slice(updateIndex + 1)
       ];
-      updatedCart.items = updatedItems;
     } else {
-      updatedCart.items.push(orderItem);
+      productItems.push(orderItem);
     }
 
     // if signed in, store cart in db
     if (authUser) {
-      CartService.updateCart(authUser.uid, {
-        ...updatedCart,
-        subtotal: calculateSubtotalFromItems(updatedCart.items),
-        count: getNumberOfItemsInCart(updatedCart.items)
-      }).then((cart) => {
-        console.log('update cart operation completed. New Cart', cart);
-      });
+      runUpdateCart(productItems, authUser);
     } else {
-      // otherwise, store directly in client state
-      setCart({
-        ...updatedCart,
-        subtotal: calculateSubtotalFromItems(updatedCart.items),
-        count: getNumberOfItemsInCart(updatedCart.items)
-      });
+      runUpdateCart(productItems);
     }
   };
 
-  return <CartContext.Provider value={{ cart, isCartLoading, addToCart }}>{children}</CartContext.Provider>;
+  const removeFromCart = async (orderItem: OrderItem) => {
+    const itemRemoveIndex = cart.items.findIndex((item: OrderItem) => item.id === orderItem.id) ?? -1;
+    if (itemRemoveIndex > -1 && typeof cart.items !== 'undefined') {
+      const productItems = [...cart.items.slice(0, itemRemoveIndex), ...cart.items.slice(itemRemoveIndex + 1)];
+      if (authUser) {
+        runUpdateCart(productItems, authUser);
+      } else {
+        runUpdateCart(productItems);
+      }
+      // if signed in, store cart in db
+    }
+  };
+
+  return <CartContext.Provider value={{ cart, isCartLoading, addToCart, removeFromCart }}>{children}</CartContext.Provider>;
 };
 
 export default CartContext;

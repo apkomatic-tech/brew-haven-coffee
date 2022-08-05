@@ -12,6 +12,7 @@ import OrderSummaryItem from '../../components/OrderSummaryItem';
 
 import styles from './payment.module.css';
 import { BiErrorCircle } from 'react-icons/bi';
+import Link from 'next/link';
 
 interface IFormData {
   firstName: string;
@@ -43,7 +44,7 @@ const Payment: NextPage = () => {
     resolver: yupResolver(schema)
   });
   const [paymentError, setPaymentError] = useState<null | string>(null);
-  const { cart } = useContext(CartContext);
+  const { cart, removeFromCart } = useContext(CartContext);
   const { items: orderItems } = cart;
   const serviceFee: number = 0.1;
   const orderSubtotal = cart.subtotal.toFixed(2);
@@ -165,16 +166,15 @@ const Payment: NextPage = () => {
 
             {/* summary block */}
             <div>
+              <div className="text-right translate-y-6">
+                <Link href="/order/review" passHref>
+                  <a className="text-black underline">Edit Order</a>
+                </Link>
+              </div>
               <h3 className="text-xl mb-7 font-bold">Order summary</h3>
               <div className={styles.summaryBlock}>
                 {orderItems.map((item: OrderItem) => (
-                  <OrderSummaryItem
-                    key={item.id}
-                    item={item}
-                    removeFromOrder={() => {
-                      // TODO: remove from cart
-                    }}
-                  />
+                  <OrderSummaryItem key={item.id} item={item} />
                 ))}
                 <div className="p-6">
                   <div className="flex justify-between py-3">

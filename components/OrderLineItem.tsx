@@ -1,7 +1,7 @@
 import React from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 import { useNextSanityImage } from 'next-sanity-image';
 import { HiOutlineTrash as DeleteIcon } from 'react-icons/hi';
 
@@ -13,8 +13,9 @@ import styles from './OrderLineItem.module.css';
 
 function OrderLineItem(item: OrderItem) {
   const { id, title, image, quantity, price } = item;
-  const imageProps = useNextSanityImage(sanityClient, image)!;
-  // const { dispatch } = useContext(CartContext);
+  const imageProps = useNextSanityImage(sanityClient, image)! as ImageProps;
+  const { removeFromCart } = useContext(CartContext);
+  const removeFromCartFn = removeFromCart!;
   return (
     <div className={styles.OrderLineItem}>
       <Link href={`/menu/${item.slug}`}>
@@ -28,12 +29,7 @@ function OrderLineItem(item: OrderItem) {
         </h3>
         <p>Quantity: {quantity}</p>
       </div>
-      <button
-        className={styles.OrderLineItemRemoveBtn}
-        type="button"
-        onClick={() => {
-          // TODO: call removeFromItem method in CartContext
-        }}>
+      <button className={styles.OrderLineItemRemoveBtn} type="button" onClick={() => removeFromCartFn(item)}>
         <DeleteIcon style={{ marginRight: '0.15rem' }} />
         Remove
       </button>

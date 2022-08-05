@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -6,10 +6,8 @@ import CartContext from '../../state/cartContext';
 import OrderLineItem from '../../components/OrderLineItem';
 
 import styles from './reviewOrder.module.css';
-import AuthContext from '../../state/authContext';
 
 const Order: NextPage = () => {
-  const { authUser } = useContext(AuthContext);
   const { cart, isCartLoading } = useContext(CartContext);
   const { items: orderItems, subtotal } = cart;
 
@@ -55,7 +53,7 @@ const Order: NextPage = () => {
                 <div className="font-bold text-xl">${subtotal.toFixed(2)}</div>
               </div>
               <Link href="/order/payment">
-                <a className="font-bold rounded-sm bg-primary text-white px-3 py-3 text-center w-full block opacity-100 hover:opacity-90 transition transition-opacity md:ml-auto md:w-72">
+                <a className="font-bold rounded-sm bg-primary text-white px-3 py-3 text-center w-full block opacity-100 hover:opacity-90 transition md:ml-auto md:w-72">
                   Proceed to Payment
                 </a>
               </Link>

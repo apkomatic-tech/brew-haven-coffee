@@ -1,5 +1,5 @@
 import type { NextPage, GetStaticProps, GetStaticPropsContext, GetStaticPaths, GetStaticPathsContext } from 'next';
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 import { useRouter } from 'next/router';
 import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
@@ -17,7 +17,7 @@ import AuthContext from '../../state/authContext';
 const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
-  const imageProps = useNextSanityImage(sanityClient, detail.image)!;
+  const imageProps = useNextSanityImage(sanityClient, detail.image)! as ImageProps;
   const { addToCart } = useContext(CartContext);
   const { authUser } = useContext(AuthContext);
 
@@ -67,21 +67,9 @@ const MenuDetail: NextPage = (props: any) => {
             )}
             <div className="flex mt-8 items-end">
               {/* Add To Order */}
-
               <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
                 Add To Order
               </button>
-
-              {/* {authUser ? (
-                <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
-                  Add To Order
-                </button>
-              ) : (
-                <div className="p-2 border-2 border-yellow-800 bg-yellow-50 flex items-center">
-                  <WarningIcon className="w-6 h-6 text-yellow-800" />
-                  <p className="ml-2 text-yellow-800">You need to be signed in to place orders.</p>
-                </div>
-              )} */}
             </div>
           </div>
         </div>
