@@ -13,6 +13,8 @@ import OrderSummaryItem from '../../components/OrderSummaryItem';
 import styles from './payment.module.css';
 import { BiErrorCircle } from 'react-icons/bi';
 import Link from 'next/link';
+import { CartService } from '../../service/cart.service';
+import AuthContext from '../../state/authContext';
 
 interface IFormData {
   firstName: string;
@@ -44,7 +46,8 @@ const Payment: NextPage = () => {
     resolver: yupResolver(schema)
   });
   const [paymentError, setPaymentError] = useState<null | string>(null);
-  const { cart, removeFromCart } = useContext(CartContext);
+  const { authUser } = useContext(AuthContext);
+  const { cart, clearCart } = useContext(CartContext);
   const { items: orderItems } = cart;
   const serviceFee: number = 0.1;
   const orderSubtotal = cart.subtotal.toFixed(2);
@@ -53,7 +56,7 @@ const Payment: NextPage = () => {
 
   function processOrder(customerData: IFormData) {
     const orderData = {
-      total: orderTotal,
+      total: Number(orderTotal),
       items: orderItems
     };
 
@@ -70,16 +73,30 @@ const Payment: NextPage = () => {
       }
     })
       .then((res: any) => res.json())
-      .then((res: any) => {
+      .then((res) => {
         if (!res.isSuccess) {
           setPaymentError(res.errors);
           return;
         }
-        setPaymentError(null);
-        // on succesfull order, we want to reset cart
-        // TODO: create and call clear cart method in cartContext
-        // TODO: create order confirmation page
-        router.push('/menu');
+
+        CartService.storeOrder({
+          total: Number(orderData.total),
+          userId: authUser ? authUser.uid : '',
+          items: orderData.items,
+          firstName: customerData.firstName,
+          lastName: customerData.lastName
+        })
+          .then(() => {
+            setPaymentError(null);
+            // on succesfull order, we want to clear cart
+            const clearCustomerCart = clearCart!;
+            clearCustomerCart();
+            // TODO: create order confirmation page
+            router.push('/menu');
+          })
+          .catch((err) => {
+            setPaymentError(err.message);
+          });
       })
       .catch((err) => {
         console.error(err.message);

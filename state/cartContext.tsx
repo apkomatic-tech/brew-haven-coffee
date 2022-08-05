@@ -33,6 +33,7 @@ const CartContext = createContext<{
   isCartLoading: boolean;
   addToCart?: (orderItem: OrderItem) => Promise<void>;
   removeFromCart?: (orderItem: OrderItem) => Promise<void>;
+  clearCart?: () => void;
 }>({ cart: initialCartState, isCartLoading: true });
 
 const CartProvider = ({ children }: CartProviderProps) => {
@@ -142,7 +143,15 @@ const CartProvider = ({ children }: CartProviderProps) => {
     }
   };
 
-  return <CartContext.Provider value={{ cart, isCartLoading, addToCart, removeFromCart }}>{children}</CartContext.Provider>;
+  const clearCart = async () => {
+    if (authUser) {
+      runUpdateCart([], authUser);
+    } else {
+      runUpdateCart([]);
+    }
+  };
+
+  return <CartContext.Provider value={{ cart, isCartLoading, addToCart, removeFromCart, clearCart }}>{children}</CartContext.Provider>;
 };
 
 export default CartContext;

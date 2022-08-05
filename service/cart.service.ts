@@ -1,4 +1,6 @@
 import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { v4 as uuid } from 'uuid';
+('uuid');
 
 import { app } from '../getFirebaseApp';
 import { OrderItem } from '../types/OrderItem';
@@ -9,6 +11,14 @@ interface Cart {
   items: OrderItem[];
   count: number;
   subtotal: number;
+}
+
+interface Order {
+  total: number;
+  userId?: string;
+  items: OrderItem[];
+  firstName: string;
+  lastName: string;
 }
 
 export class CartService {
@@ -26,7 +36,7 @@ export class CartService {
       };
       await setDoc(docRef, emptyCart);
       return emptyCart;
-    } catch (error) {}
+    } catch (err) {}
   }
 
   static async updateCart(userID: string | undefined, cart: Cart) {
@@ -38,6 +48,13 @@ export class CartService {
     try {
       await setDoc(docRef, cart);
       return (await getDoc(docRef)).data();
+    } catch (err) {}
+  }
+
+  static async storeOrder(order: Order) {
+    const orderId = uuid();
+    try {
+      await setDoc(doc(db, 'order', orderId), order);
     } catch (err) {}
   }
 }
