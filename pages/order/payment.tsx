@@ -48,6 +48,7 @@ const Payment: NextPage = () => {
   const serviceFee: number = 0.1;
   const orderSubtotal = cart.subtotal.toFixed(2);
   const orderTotal = useMemo(() => (cart.subtotal + cart.subtotal * serviceFee).toFixed(2), [cart.subtotal]);
+  const disabledPaymentButton = orderItems.length === 0;
 
   function processOrder(customerData: IFormData) {
     const orderData = {
@@ -84,12 +85,6 @@ const Payment: NextPage = () => {
         setPaymentError('Sorry, we are not able to process your request, please try again');
       });
   }
-
-  useEffect(() => {
-    if (!orderItems.length) {
-      router.push('/menu');
-    }
-  }, [orderItems.length, router]);
 
   return (
     <>
@@ -202,7 +197,7 @@ const Payment: NextPage = () => {
                   </div>
                 )}
                 <div className="border-t border-gray-300 p-6">
-                  <button type="submit" className="bg-primarydark text-white text-center py-3 px-12 w-full">
+                  <button type="submit" disabled={disabledPaymentButton} className="bg-primarydark text-white text-center py-3 px-12 w-full disabled:opacity-50">
                     Place Order
                   </button>
                 </div>

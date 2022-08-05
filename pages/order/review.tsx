@@ -6,10 +6,23 @@ import CartContext from '../../state/cartContext';
 import OrderLineItem from '../../components/OrderLineItem';
 
 import styles from './reviewOrder.module.css';
+import AuthContext from '../../state/authContext';
 
 const Order: NextPage = () => {
-  const { cart } = useContext(CartContext);
+  const { authUser } = useContext(AuthContext);
+  const { cart, isCartLoading } = useContext(CartContext);
   const { items: orderItems, subtotal } = cart;
+
+  if (isCartLoading) {
+    return (
+      <div>
+        <Head>
+          <title>Doge Coffee | Review Your Order</title>
+        </Head>
+        <div className="page-content mx-auto max-w-4xl px-8 md:px-2 text-left">Loading cart...</div>
+      </div>
+    );
+  }
 
   return (
     <div>

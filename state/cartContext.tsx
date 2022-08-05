@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useReducer, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import { createContext } from 'react';
 import { useLocalStorage } from 'react-use';
@@ -21,81 +21,6 @@ type CartState = {
   subtotal: number;
 };
 
-// export type CartAction =
-//   | { type: 'ADD_ORDER'; payload: OrderItem }
-//   | { type: 'REMOVE_ORDER'; payload: number | string }
-//   | { type: 'CALCULATE_SUBTOTAL' }
-//   | { type: 'GET_ITEM_COUNT' }
-//   | { type: 'CLEAR_CART' }
-//   | { type: 'SET_CART'; payload: CartState };
-
-// initialize reducer with actions
-// const cartReducer = (state: CartState, action: CartAction) => {
-//   switch (action.type) {
-//     case 'ADD_ORDER':
-//       const currentOrderItem = state.items.find((item: OrderItem) => item.id === action.payload.id);
-
-//       if (currentOrderItem) {
-//         const updateIndex = state.items.indexOf(currentOrderItem);
-//         return {
-//           ...state,
-//           items: [
-//             ...state.items.slice(0, updateIndex),
-//             {
-//               ...currentOrderItem,
-//               quantity: state.items[updateIndex].quantity + action.payload.quantity
-//             },
-//             ...state.items.slice(updateIndex + 1)
-//           ]
-//         };
-//       }
-
-//       return {
-//         ...state,
-//         items: [...state.items, { ...action.payload }]
-//       };
-//     case 'REMOVE_ORDER':
-//       const ix = state.items.findIndex((item: OrderItem) => item.id === action.payload) ?? -1;
-//       if (ix > -1 && typeof state.items !== 'undefined') {
-//         const updatedItems = [...state.items.slice(0, ix), ...state.items.slice(ix + 1)];
-//         return {
-//           ...state,
-//           items: updatedItems
-//         };
-//       }
-//       return state;
-//     case 'CALCULATE_SUBTOTAL':
-//       return {
-//         ...state,
-//         subtotal: Number(
-//           state.items
-//             .reduce((acc: number, item: OrderItem) => {
-//               acc += item.price * item.quantity;
-//               return acc;
-//             }, 0)
-//             .toFixed(2)
-//         )
-//       };
-//     case 'GET_ITEM_COUNT':
-//       return {
-//         ...state,
-//         count: state.items.reduce((acc: number, item: OrderItem) => {
-//           acc += item.quantity;
-//           return acc;
-//         }, 0)
-//       };
-//     case 'CLEAR_CART':
-//       return {
-//         ...state,
-//         subtotal: 0,
-//         items: [],
-//         count: 0
-//       };
-//     default:
-//       return { ...state };
-//   }
-// };
-
 const initialCartState = {
   items: [],
   count: 0,
@@ -104,9 +29,10 @@ const initialCartState = {
 
 const CartContext = createContext<{
   cart: CartState;
+  isCartLoading: boolean;
   addToCart?: (orderItem: OrderItem) => Promise<void>;
   removeFromCart?: (orderItem: OrderItem) => Promise<void>;
-}>({ cart: initialCartState });
+}>({ cart: initialCartState, isCartLoading: true });
 
 const CartProvider = ({ children }: CartProviderProps) => {
   const [cartFromLocalStorage, setCartFromLocalStorage] = useLocalStorage<CartState>('order', initialCartState);
@@ -115,19 +41,28 @@ const CartProvider = ({ children }: CartProviderProps) => {
     if (!authUser) return initialCartState;
     return cartFromLocalStorage ?? initialCartState;
   });
+  const [isCartLoading, setIsCartLoading] = useState(true);
 
   useEffect(() => {
     let cartSubscribe = () => {};
+    setIsCartLoading(true);
     if (authUser) {
       // get initial cart on load for logged in
-      CartService.getCart(authUser.uid).then((cartData) => {
-        if (cartData) {
-          const cartState = cartData as CartState;
-          setCart(cartState);
-        } else {
-          setCart(initialCartState);
-        }
-      });
+
+      CartService.getCart(authUser.uid)
+        .then((cartData) => {
+          setIsCartLoading(false);
+          if (cartData) {
+            const cartState = cartData as CartState;
+            setCart(cartState);
+          } else {
+            setCart(initialCartState);
+          }
+        })
+        .catch((err) => {
+          setIsCartLoading(false);
+          console.error('Unhandled cart error', err.message);
+        });
 
       // update client cart whenever there are changes in db
       cartSubscribe = onSnapshot(doc(db, 'cart', authUser.uid), (cartDoc) => {
@@ -145,6 +80,9 @@ const CartProvider = ({ children }: CartProviderProps) => {
   useEffect(() => {
     if (!authUser) {
       setCartFromLocalStorage(cart);
+      window.setTimeout(() => {
+        setIsCartLoading(false);
+      }, 500);
     }
   }, [authUser, cart, setCartFromLocalStorage]);
 
@@ -185,28 +123,7 @@ const CartProvider = ({ children }: CartProviderProps) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (authUser) {
-  //     CartFirebase.setCustomerCart(authUser.uid, state);
-  //   }
-  // }, [state, authUser]);
-
-  // useEffect(() => {
-  //   if (authUser) {
-  //     CartFirebase.updateCustomerCart(authUser.uid, state);
-  //   }
-  // }, [authUser, state]);
-
-  // useEffect(() => {
-  //   if (!authUser) dispatch({ type: 'CLEAR_CART' });
-  // }, [authUser]);
-
-  // useEffect(() => {
-  //   dispatch({ type: 'CALCULATE_SUBTOTAL' });
-  //   dispatch({ type: 'GET_ITEM_COUNT' });
-  // }, [state.items]);
-
-  return <CartContext.Provider value={{ cart, addToCart }}>{children}</CartContext.Provider>;
+  return <CartContext.Provider value={{ cart, isCartLoading, addToCart }}>{children}</CartContext.Provider>;
 };
 
 export default CartContext;
