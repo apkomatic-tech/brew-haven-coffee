@@ -33,7 +33,7 @@ function NavBar() {
             <a className={`hover:text-primary ${pathname === '/about' ? 'text-primarydark' : ''}`}>About</a>
           </Link>
           <Link href="/menu" passHref>
-            <a className="text-black border-2 border-black py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200">
+            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 border-secondary bg-secondary">
               <span className="inline-block mr-2">Menu</span> <Image src={Cup} alt="" width={30} height={30} />
             </a>
           </Link>
@@ -45,7 +45,7 @@ function NavBar() {
         <HeaderCartLogin />
         <nav className="flex grid-flow-col-dense gap-4 text-gray-700 font-bold items-center">
           <Link href="/menu">
-            <a className="border-2 border-black py-2 px-4 ml-6 flex items-center hover:opacity-80 duration-200">
+            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 bg-secondary border-secondary ml-6">
               <span className="inline-block mr-2">Menu</span> <Image src={Cup} alt="" width={30} height={30} />
             </a>
           </Link>
@@ -89,13 +89,6 @@ function NavBar() {
                     onClick={() => setShowMobileNav(false)}
                     className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/menu' ? 'bg-primary' : ''}`}>
                     Menu
-                  </a>
-                </Link>
-                <Link href="/order">
-                  <a
-                    onClick={() => setShowMobileNav(false)}
-                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/order' ? 'bg-primary' : ''}`}>
-                    Order
                   </a>
                 </Link>
                 <Link href="/login">

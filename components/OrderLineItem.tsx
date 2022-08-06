@@ -9,15 +9,13 @@ import { OrderItem } from '../types/OrderItem';
 import sanityClient from '../sanityClient';
 import CartContext from '../state/cartContext';
 
-import styles from './OrderLineItem.module.css';
-
 function OrderLineItem(item: OrderItem) {
-  const { id, title, image, quantity, price } = item;
+  const { title, image, quantity, price } = item;
   const imageProps = useNextSanityImage(sanityClient, image)! as ImageProps;
   const { removeFromCart } = useContext(CartContext);
   const removeFromCartFn = removeFromCart!;
   return (
-    <div className={styles.OrderLineItem}>
+    <div className="flex mb-6 pb-6 border-b border-gray-200 relative">
       <Link href={`/menu/${item.slug}`}>
         <a>
           <Image {...imageProps} width={167} height={167} alt={title} />
@@ -29,7 +27,10 @@ function OrderLineItem(item: OrderItem) {
         </h3>
         <p>Quantity: {quantity}</p>
       </div>
-      <button className={styles.OrderLineItemRemoveBtn} type="button" onClick={() => removeFromCartFn(item)}>
+      <button
+        className="flex items-center text-primary font-bold absolute bottom-6 right-0 py-1 px-2 rounded-sm text-sm hover:text-primarydark"
+        type="button"
+        onClick={() => removeFromCartFn(item)}>
         <DeleteIcon style={{ marginRight: '0.15rem' }} />
         Remove
       </button>

@@ -7,7 +7,9 @@ module.exports = {
         primary: '#FF5112',
         primarydark: '#FF5112',
         primaryOpaque: '#FF5112',
-        secondary: '#13FFDB'
+        secondary: '#13FFDB',
+        secondaryOpaque: '#e2fffb',
+        secondaryBgColor: '#f0fffd'
       }
     }
   },
