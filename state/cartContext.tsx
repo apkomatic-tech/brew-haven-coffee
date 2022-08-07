@@ -107,10 +107,10 @@ const CartProvider = ({ children }: CartProviderProps) => {
 
   const addToCart = async (orderItem: OrderItem) => {
     const currentOrderItem = cart.items.find((item: OrderItem) => item.id === orderItem.id);
-    let productItems: OrderItem[] = [];
+    let updatedCartItems;
     if (currentOrderItem) {
       const updateIndex = cart.items.indexOf(currentOrderItem);
-      productItems = [
+      updatedCartItems = [
         ...cart.items.slice(0, updateIndex),
         {
           ...currentOrderItem,
@@ -119,14 +119,14 @@ const CartProvider = ({ children }: CartProviderProps) => {
         ...cart.items.slice(updateIndex + 1)
       ];
     } else {
-      productItems.push(orderItem);
+      updatedCartItems = [...cart.items, orderItem];
     }
 
     // if signed in, store cart in db
     if (authUser) {
-      runUpdateCart(productItems, authUser);
+      runUpdateCart(updatedCartItems, authUser);
     } else {
-      runUpdateCart(productItems);
+      runUpdateCart(updatedCartItems);
     }
   };
 

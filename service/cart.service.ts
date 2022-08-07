@@ -1,8 +1,9 @@
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { collection, doc, DocumentData, getDoc, getDocs, getFirestore, query, setDoc, where } from 'firebase/firestore';
 import { v4 as uuid } from 'uuid';
 ('uuid');
 
 import { app } from '../getFirebaseApp';
+import { Order } from '../types/Order';
 import { OrderItem } from '../types/OrderItem';
 
 const db = getFirestore(app);
@@ -11,14 +12,6 @@ interface Cart {
   items: OrderItem[];
   count: number;
   subtotal: number;
-}
-
-interface Order {
-  total: number;
-  userId?: string;
-  items: OrderItem[];
-  firstName: string;
-  lastName: string;
 }
 
 export class CartService {
@@ -53,8 +46,29 @@ export class CartService {
 
   static async storeOrder(order: Order) {
     const orderId = uuid();
+    order.id = orderId;
     try {
       await setDoc(doc(db, 'order', orderId), order);
     } catch (err) {}
+  }
+
+  static async getOrdersByUserId(userId: string) {
+    const ordersRef = collection(db, 'order');
+    const q = query(ordersRef, where('userId', '==', userId));
+    const ordersSnapshot = await getDocs(q);
+    const orders: Order[] = [];
+    ordersSnapshot.forEach((orderSnapshot) => {
+      const order: Order = {
+        id: orderSnapshot.get('id'),
+        items: orderSnapshot.get('items'),
+        total: orderSnapshot.get('total'),
+        firstName: orderSnapshot.get('firstName'),
+        lastName: orderSnapshot.get('lastName'),
+        userId: orderSnapshot.get('userId'),
+        timestamp: Date.now()
+      };
+      orders.push(order);
+    });
+    return orders;
   }
 }

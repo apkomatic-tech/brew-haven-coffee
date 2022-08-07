@@ -28,7 +28,7 @@ function OrderLineItem(item: OrderItem) {
         <p>Quantity: {quantity}</p>
       </div>
       <button
-        className="flex items-center text-primary font-bold absolute bottom-6 right-0 py-1 px-2 rounded-sm text-sm hover:text-primarydark"
+        className="flex items-center text-red-700 font-bold absolute bottom-6 right-0 py-1 px-2 rounded-sm text-sm hover:text-red-800"
         type="button"
         onClick={() => removeFromCartFn(item)}>
         <DeleteIcon style={{ marginRight: '0.15rem' }} />

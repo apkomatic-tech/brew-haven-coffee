@@ -11,11 +11,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Doge Coffee | Home</title>
       </Head>
-      <div
-        style={{
-          backgroundImage: `url(${heroBackgroundImage.src})`
-        }}
-        className="px-2 pt-24 pb-24 md:pt-0 md:pb-0 flex items-center bg-cover bg-no-repeat bg-secondaryOpaque md:min-h-[75vh]">
+      <div className="px-2 pt-24 pb-24 md:pt-0 md:pb-0 flex items-center bg-mainBgColor md:min-h-[75vh]">
         <div className="container mx-auto max-w-full lg:max-w-7xl">
           <h1 className="font-bold text-3xl md:text-center md:text-5xl mb-5">
             Enjoy a delicious cup of <span className="text-primary">Doge Coffee</span>.

@@ -185,7 +185,7 @@ const Payment: NextPage = () => {
             <div>
               <div className="text-right translate-y-6">
                 <Link href="/order/review" passHref>
-                  <a className="text-black underline">Edit Order</a>
+                  <a className="link">Edit Order</a>
                 </Link>
               </div>
               <h3 className="text-xl mb-7 font-bold">Order summary</h3>

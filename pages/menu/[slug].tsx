@@ -56,18 +56,18 @@ const MenuDetail: NextPage = (props: any) => {
           </div>
           <div>
             <h1 className="text-4xl font-bold mb-6">{detail.name}</h1>
-            <p className="text-3xl mb-12 font-bold items-center bg-secondary inline-flex text-black py-1 px-4  rounded-sm">
+            <p className="text-3xl mb-8 font-bold items-center bg-secondaryOpaque inline-flex text-black py-1 px-4  rounded-sm">
               <Price priceValue={detail.price} />
             </p>
             {detail.description && (
-              <>
-                <h3 className="text-xl font-bold mb-6">Description</h3>
-                <p>{detail.description}</p>
-              </>
+              <div className="py-6 border-b border-t border-slate-200">
+                <h3 className="text-lg font-bold mb-2">Description</h3>
+                <p className="text-gray-600">{detail.description}</p>
+              </div>
             )}
-            <div className="flex mt-8 items-end">
+            <div className="flex mt-6 items-end">
               {/* Add To Order */}
-              <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
+              <button className="bg-primarydark text-white text-lg px-8 py-4 font-bold max-w-xs rounded-md" type="button" onClick={handleAddToOrder}>
                 Add To Order
               </button>
             </div>
