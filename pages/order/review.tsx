@@ -53,9 +53,7 @@ const Order: NextPage = () => {
                 <div className="font-bold text-xl">${subtotal.toFixed(2)}</div>
               </div>
               <Link href="/order/payment">
-                <a className="font-bold rounded-sm bg-primary text-white px-3 py-3 text-center w-full block opacity-100 hover:opacity-90 transition md:ml-auto md:w-72">
-                  Proceed to Payment
-                </a>
+                <a className="dgcf-button w-full block transition md:ml-auto md:w-72">Proceed to Payment</a>
               </Link>
             </div>
           </div>

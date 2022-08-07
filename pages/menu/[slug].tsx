@@ -1,11 +1,10 @@
-import type { NextPage, GetStaticProps, GetStaticPropsContext, GetStaticPaths, GetStaticPathsContext } from 'next';
+import type { NextPage, GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
 import Image, { ImageProps } from 'next/image';
 import { useRouter } from 'next/router';
 import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
-import { AiOutlineWarning as WarningIcon } from 'react-icons/ai';
 
 import sanityClient from '../../sanityClient';
 import Head from 'next/head';
@@ -68,12 +67,19 @@ const MenuDetail: NextPage = (props: any) => {
                 <p className="text-gray-600">{detail.description}</p>
               </div>
             )}
-            <div className="flex mt-6 items-end">
-              {/* Add To Order */}
-              <button className="bg-primarydark text-white text-lg px-8 py-4 font-bold max-w-xs rounded-md" type="button" onClick={handleAddToOrder}>
-                Add To Order
-              </button>
-            </div>
+            {!authUser && (
+              <p className="text-amber-700 text-lg font-bold bg-amber-100 border-l-[16px] border-amber-800 p-2 text-center rounded-sm">
+                Only logged in customers can add to order at this time. Please <Link href="/account/login"><a>Login</a></Link>
+              </p>
+            )}
+            {authUser && (
+              <div className="flex mt-6 items-end">
+                {/* Add To Order */}
+                <button className="dgcf-button min-w-[200px] w-full sm:w-[50%]" type="button" onClick={handleAddToOrder}>
+                  Add To Order
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -81,14 +87,7 @@ const MenuDetail: NextPage = (props: any) => {
   );
 };
 
-interface Drink {
-  name: string;
-  slug: {
-    current: string;
-  };
-}
-
-export const getStaticPaths: GetStaticPaths = async (context: GetStaticPathsContext) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const drinks: any[] = await sanityClient.fetch(groq`
     *[_type == 'drink'] {
       name, slug
