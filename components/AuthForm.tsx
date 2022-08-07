@@ -10,14 +10,16 @@ const EMAIL_REGX = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))
 type LoginForm = {
   email: string;
   password: string;
+  name: string;
 };
 type AuthFormProps = {
   submitButtonText: string;
   authError?: string;
+  actionType: 'create' | 'login';
   handleFormSubmit: (userData: { email: string; password: string }) => void;
 };
 
-const AuthForm: React.FC<AuthFormProps> = ({ submitButtonText, authError, handleFormSubmit }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ submitButtonText, authError, handleFormSubmit, actionType }) => {
   const {
     register,
     handleSubmit,
@@ -27,13 +29,28 @@ const AuthForm: React.FC<AuthFormProps> = ({ submitButtonText, authError, handle
 
   return (
     <>
-      <form className="block mx-auto max-w-md p-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form className="block mx-auto max-w-md mt-4 sm:px-4" onSubmit={handleSubmit(onSubmit)} noValidate>
         {authError && (
           <div className="p-4 bg-red-200 text-center mb-4 text-red-900 flex items-center text-sm border-l-4 border-red-800">
             <span className="mr-2 text-xl">
               <BiErrorCircle />
             </span>
             <span>{authError}</span>
+          </div>
+        )}
+        {actionType === 'create' && (
+          <div className="mb-3">
+            <label htmlFor="email" className="mb-1 font-bold inline-block text-sm text-gray-600 cursor-pointer">
+              Name
+            </label>
+            <input
+              {...register('name', { minLength: 2 })}
+              id="name"
+              type="name"
+              autoComplete="false"
+              className={combineClasses('rounded-md border border-gray-400 bg-white block w-full p-2', Boolean(formErrors.name) ? 'border-red-700' : false)}
+            />
+            {formErrors.name?.type === 'minLength' && <div className="font-bold text-sm text-red-700">Name must be at least 2 characters long</div>}
           </div>
         )}
         <div className="mb-3">

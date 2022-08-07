@@ -5,10 +5,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import AuthContext from '../state/authContext';
-import { CartService } from '../service/cart.service';
-import { Order } from '../types/Order';
-import OrderHistoryItem from '../components/account/OrderHistoryItem';
+import AuthContext from '../../state/authContext';
+import { CartService } from '../../service/cart.service';
+import { Order } from '../../types/Order';
+import OrderHistoryItem from '../../components/account/OrderHistoryItem';
+import AccountNav from '../../components/account/AccountNav';
 
 const Account: NextPage = () => {
   const { authUser, signOut } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const Account: NextPage = () => {
 
   useEffect(() => {
     if (!authUser) {
-      router.push('/login');
+      router.push('/account/login');
       return;
     }
 
@@ -33,18 +34,11 @@ const Account: NextPage = () => {
         <title>Doge Coffee | User Dashboard</title>
       </Head>
       <div className="page-content wrapper max-w-2xl px-4">
-        {authUser && (
-          <h1 className="text-2xl font-bold">
-            <span>{`Welcome, ${authUser.displayName || authUser.email}!`}</span>
-            <button type="button" className="ml-2 underline text-red-700 text-base" onClick={() => signOut()}>
-              Logout
-            </button>
-          </h1>
-        )}
+        <AccountNav activeTab="order-history" />
 
         {/* order history */}
         <div className="mt-8">
-          <h2 className="font-bold text-3xl mb-2">Order History</h2>
+          <h1 className="font-bold text-3xl mb-2">Order History</h1>
           <p>These are orders you placed.</p>
           {/* show skeleton when loading order history */}
           {loadingOrders && (

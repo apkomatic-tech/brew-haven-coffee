@@ -3,8 +3,8 @@ import router from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
-import AuthContext from '../state/authContext';
-import AuthForm from '../components/AuthForm';
+import AuthContext from '../../state/authContext';
+import AuthForm from '../../components/AuthForm';
 
 const Login: NextPage = () => {
   const authCtx = useContext(AuthContext);
@@ -12,7 +12,7 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     if (authUser?.email) {
-      router.push('/account');
+      router.push('/account/settings');
     }
   }, [authUser]);
 
@@ -22,8 +22,9 @@ const Login: NextPage = () => {
         <title>Doge Coffee | Create Account</title>
       </Head>
       <div className="page-content wrapper-narrow">
-        <h1 className="text-center text-2xl font-bold mb-4">Create Account</h1>
+        <h1 className="sm:text-center text-2xl font-bold mb-4">Create Account</h1>
         <AuthForm
+          actionType="create"
           submitButtonText="Create Account"
           authError={authError}
           handleFormSubmit={(userData) => {
@@ -32,7 +33,7 @@ const Login: NextPage = () => {
         />
         <div className="mt-6 text-center">
           Already have an account?{' '}
-          <Link href="/login">
+          <Link href="/account/login">
             <a className="text-primary">Login</a>
           </Link>
         </div>

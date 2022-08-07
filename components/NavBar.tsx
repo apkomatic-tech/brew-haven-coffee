@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -9,10 +9,12 @@ import { HiMenu as MenuIcon, HiX as CloseMenuIcon } from 'react-icons/hi';
 import Logo from '../public/logo.svg';
 import Cup from '../public/cup-outlined.svg';
 import HeaderCartLogin from './HeaderCartLogin';
+import AuthContext from '../state/authContext';
 
 function NavBar() {
   const { pathname } = useRouter();
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const { authUser } = useContext(AuthContext);
   return (
     <div className="flex p-4 items-center">
       <Link href="/" passHref>
@@ -91,10 +93,10 @@ function NavBar() {
                     Menu
                   </a>
                 </Link>
-                <Link href="/login">
+                <Link href={authUser ? '/account/settings' : '/account/login'}>
                   <a
                     onClick={() => setShowMobileNav(false)}
-                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/login' ? 'bg-primary' : ''}`}>
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/account/login' ? 'bg-primary' : ''}`}>
                     Account
                   </a>
                 </Link>

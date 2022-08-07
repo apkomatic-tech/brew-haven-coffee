@@ -55,10 +55,13 @@ const MenuDetail: NextPage = (props: any) => {
             <Image objectFit="contain" className="sm:max-w-md" {...imageProps} layout="intrinsic" alt={detail.name} placeholder="blur" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold mb-6">{detail.name}</h1>
-            <p className="text-3xl mb-8 font-bold items-center bg-secondaryOpaque inline-flex text-black py-1 px-4  rounded-sm">
+            <h1 className="text-xl sm:text-3xl font-bold mb-6 flex justify-between">
+              <span>{detail.name}</span>
               <Price priceValue={detail.price} />
-            </p>
+            </h1>
+            {/* <p className="text-3xl mb-8 font-bold items-center bg-secondaryOpaque inline-flex text-black py-1 px-4  rounded-sm">
+              
+            </p> */}
             {detail.description && (
               <div className="py-6 border-b border-t border-slate-200">
                 <h3 className="text-lg font-bold mb-2">Description</h3>
