@@ -40,7 +40,7 @@ const Account: NextPage = () => {
 
         <div className="my-8">
           <h1 className="font-bold text-3xl mb-2">Account Settings</h1>
-          <p>This this your account settings page.</p>
+          <p>This your account settings page.</p>
         </div>
 
         {authUser?.displayName && (
