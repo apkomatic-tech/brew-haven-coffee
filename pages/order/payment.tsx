@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -37,16 +37,19 @@ const schema = yup.object().shape({
 });
 
 const Payment: NextPage = () => {
+  const { authUser } = useContext(AuthContext);
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<IFormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      emailAddress: authUser?.email ?? ''
+    }
   });
   const [paymentError, setPaymentError] = useState<null | string>(null);
-  const { authUser } = useContext(AuthContext);
   const { cart, clearCart } = useContext(CartContext);
   const { items: orderItems } = cart;
   const serviceFee: number = 0.1;
@@ -214,7 +217,7 @@ const Payment: NextPage = () => {
                   </div>
                 )}
                 <div className="border-t border-gray-300 p-6">
-                  <button type="submit" disabled={disabledPaymentButton} className="bg-primarydark text-white text-center py-3 px-12 w-full disabled:opacity-50">
+                  <button type="submit" disabled={disabledPaymentButton} className="dgcf-button w-full">
                     Place Order
                   </button>
                 </div>

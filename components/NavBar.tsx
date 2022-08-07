@@ -35,7 +35,7 @@ function NavBar() {
             <a className={`hover:text-primary ${pathname === '/about' ? 'text-primarydark' : ''}`}>About</a>
           </Link>
           <Link href="/menu" passHref>
-            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 border-secondary bg-secondary">
+            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 border-secondary bg-secondary rounded-md">
               <span className="inline-block mr-2">Menu</span> <Image src={Cup} alt="" width={30} height={30} />
             </a>
           </Link>
@@ -47,7 +47,7 @@ function NavBar() {
         <HeaderCartLogin />
         <nav className="flex grid-flow-col-dense gap-4 text-gray-700 font-bold items-center">
           <Link href="/menu">
-            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 bg-secondary border-secondary ml-6">
+            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 bg-secondary border-secondary ml-6 rounded-md">
               <span className="inline-block mr-2">Menu</span> <Image src={Cup} alt="" width={30} height={30} />
             </a>
           </Link>

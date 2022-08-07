@@ -1,33 +1,20 @@
 import type { NextPage } from 'next';
 import router from 'next/router';
 import Head from 'next/head';
-import React, { useContext, useEffect, useState } from 'react';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import React, { useContext, useEffect } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import AuthContext from '../../state/authContext';
-import { CartService } from '../../service/cart.service';
-import { Order } from '../../types/Order';
-import OrderHistoryItem from '../../components/account/OrderHistoryItem';
 import AccountNav from '../../components/account/AccountNav';
 
 const Account: NextPage = () => {
   const { authUser, signOut } = useContext(AuthContext);
-  const [loadingOrders, setLoadingOrders] = useState(true);
-  const [orders, setOrders] = useState<Order[]>([]);
-
-  console.log(authUser);
 
   useEffect(() => {
     if (!authUser) {
       router.push('/account/login');
       return;
     }
-
-    CartService.getOrdersByUserId(authUser.uid).then((orderData) => {
-      setLoadingOrders(false);
-      setOrders(orderData);
-    });
   }, []);
 
   return (
@@ -54,7 +41,7 @@ const Account: NextPage = () => {
           </div>
         )}
 
-        <button type="button" className="mt-10 px-6 py-2 bg-primary text-white rounded-sm" onClick={() => signOut()}>
+        <button type="button" className="dgcf-button mt-10" onClick={() => signOut()}>
           Logout
         </button>
       </div>

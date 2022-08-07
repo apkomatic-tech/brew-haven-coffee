@@ -3,8 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import heroBackgroundImage from '../public/hero-bg.svg';
-
 const Home: NextPage = () => {
   return (
     <>
@@ -32,7 +30,7 @@ const Home: NextPage = () => {
               transition={{
                 delay: 0.2
               }}
-              className="py-4 px-12 block w-full font-bold rounded-md bg-primary text-white text-center md:mx-auto md:w-80 md:text-xl">
+              className="dgcf-button block w-full md:mx-auto md:w-80 md:text-xl">
               Start your Order
             </motion.a>
           </Link>

@@ -33,7 +33,7 @@ const Order: NextPage = () => {
           <div className={styles.emptyOrder}>
             Your order contains no items.
             <Link href="/menu" passHref>
-              <a className="bg-primary text-white p-2 block max-w-xs mx-auto mt-4">Explore Menu</a>
+              <a className="dgcf-button block max-w-xs mx-auto mt-4">Explore Menu</a>
             </Link>
           </div>
         )}

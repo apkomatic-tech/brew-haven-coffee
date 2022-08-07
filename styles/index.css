@@ -41,5 +41,5 @@ p {
 
 
 .dgcf-button {
-  @apply text-white font-bold bg-primary rounded-md p-3 text-center no-underline transition-colors hover:bg-primarydark active:bg-primarydark focus:bg-primarydark disabled:bg-primaryOpaque
+  @apply text-white font-bold bg-primary rounded-md p-3 text-center no-underline transition-colors hover:bg-primarydark active:bg-primarydark focus:bg-primarydark disabled:bg-primaryOpaque disabled:cursor-not-allowed;
 }
