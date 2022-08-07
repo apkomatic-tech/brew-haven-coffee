@@ -23,7 +23,6 @@ const MenuDetail: NextPage = (props: any) => {
   const handleAddToOrder = (): void => {
     const orderItem = { ...detail, title: detail.name, quantity: 1 };
     const addToCartFn = addToCart!;
-    // dispatch({ type: 'ADD_ORDER', payload: orderItem });
     addToCartFn(orderItem)!;
     router.push('/order/review');
   };
@@ -67,9 +66,10 @@ const MenuDetail: NextPage = (props: any) => {
                 <p className="text-gray-600">{detail.description}</p>
               </div>
             )}
+            {/* only show add to order if user is logged in  */}
             {!authUser && (
-              <p className="text-amber-700 text-lg font-bold bg-amber-100 border-l-[16px] border-amber-800 p-2 text-center rounded-sm">
-                Only logged in customers can add to order at this time. Please <Link href="/account/login"><a>Login</a></Link>
+              <p className="text-amber-700 text-sm font-bold bg-amber-100 border-l-[16px] border-amber-800 pl-6 py-4 pr-4 text-left rounded-sm">
+                Only logged in customers can add to order at this time. Please <Link href="/account/login"><a className="underline text-black">Login</a></Link>
               </p>
             )}
             {authUser && (
