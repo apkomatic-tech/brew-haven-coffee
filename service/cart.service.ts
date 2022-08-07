@@ -44,7 +44,7 @@ export class CartService {
     } catch (err) {}
   }
 
-  static async storeOrder(order: Order) {
+  static async createOrder(order: Order) {
     const orderId = uuid();
     order.id = orderId;
     try {

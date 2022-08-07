@@ -15,11 +15,13 @@ const OrderHistoryProductItem = ({ item }: OrderHistoryProductItemProps) => {
         <Image className="w-full max-w-[200px] block" {...productImage} alt={item.title} />
       </div>
       <div className="col-span-11">
-        <div className="md:text-lg font-bold flex justify-between">
+        <div className="md:text-lg font-bold flex justify-between mb-4 pb-4 border-b border-slate-200">
           <span>{item.title} </span>
           <span>${item.price.toFixed(2)}</span>
         </div>
-        {item.description && <p>{item.description}</p>}
+        <p className="my-2">
+          Quantity: <span className="text-black">{item.quantity}</span>
+        </p>
         <div className="mt-4">
           <Link href={`/menu/${item.slug}`} passHref>
             <a className="link">View Item</a>

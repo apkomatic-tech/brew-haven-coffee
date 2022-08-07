@@ -79,7 +79,7 @@ const Payment: NextPage = () => {
           return;
         }
 
-        CartService.storeOrder({
+        CartService.createOrder({
           total: Number(orderData.total),
           userId: authUser ? authUser.uid : '',
           items: orderData.items,
