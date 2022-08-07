@@ -39,3 +39,8 @@ yarn-error.log*
 
 # vscode configs
 /.vscode
+/.idea/.gitignore
+/.idea/doge-coffee.iml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
