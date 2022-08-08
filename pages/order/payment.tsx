@@ -87,7 +87,8 @@ const Payment: NextPage = () => {
           userId: authUser ? authUser.uid : '',
           items: orderData.items,
           firstName: customerData.firstName,
-          lastName: customerData.lastName
+          lastName: customerData.lastName,
+          date: Date.now()
         })
           .then(() => {
             setPaymentError(null);

@@ -14,35 +14,33 @@ interface ILayout {
 }
 
 const Layout: React.FC<ILayout> = ({ title, children }) => {
+  const copyrightYear = new Date().getFullYear();
   return (
     <>
       <Head>
         <title>{(title && `${title} | Doge Coffee`) || 'Doge Coffee'}</title>
-        <meta name='description' content='Doge Coffee - a website for a fictional coffee company' />
-        <link rel='icon' href='/favicon.png' />
+        <meta name="description" content="Doge Coffee - a website for a fictional coffee company" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
-      <div className='page'>
-        <header className='container mx-auto max-w-full lg:max-w-7xl'>
+      <div className="page">
+        <header className="container mx-auto max-w-full lg:max-w-7xl bg-mainBgColor">
           <NavBar />
         </header>
         <main>{children}</main>
-        <footer className='my-10'>
-          <div className='container mx-auto max-w-full px-4 lg:max-w-7xl'>
-            <div className='flex mb-4'>
-              <a href='#' className='mr-3'>
-                <Image src={FacebookIcon} width={35} height={35} alt='' />
+        <footer className="my-10">
+          <div className="container mx-auto max-w-full px-4 lg:max-w-7xl">
+            <div className="flex mb-4">
+              <a href="https://www.facebook.com" className="mr-3">
+                <Image src={FacebookIcon} width={35} height={35} alt="" />
               </a>
-              <a href='#' className='mr-3'>
-                <Image src={InstagramIcon} width={35} height={35} alt='' />
+              <a href="https://www.instagram.com" className="mr-3">
+                <Image src={InstagramIcon} width={35} height={35} alt="" />
               </a>
-              <a href='#' className='mr-3'>
-                <Image src={TwitterIcon} width={35} height={35} alt='' />
-              </a>
-              <a href='#'>
-                <Image src={YouTubeIcon} width={35} height={35} alt='' />
+              <a href="https://www.twitter.com">
+                <Image src={TwitterIcon} width={35} height={35} alt="" />
               </a>
             </div>
-            <p className='text-gray-600 text-sm'>&copy; 2021 Doge Coffee. All Rights Reserved</p>
+            <p className="text-gray-600 text-sm">&copy; {copyrightYear} Doge Coffee. All Rights Reserved</p>
           </div>
         </footer>
       </div>

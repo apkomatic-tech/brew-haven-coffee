@@ -65,7 +65,7 @@ export class CartService {
         firstName: orderSnapshot.get('firstName'),
         lastName: orderSnapshot.get('lastName'),
         userId: orderSnapshot.get('userId'),
-        timestamp: Date.now()
+        date: orderSnapshot.get('date')
       };
       orders.push(order);
     });

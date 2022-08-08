@@ -14,7 +14,7 @@ const OrderHistoryItem = ({ order }: OrderHistoryItemProps) => {
         </div>
         <div>
           <div className="font-bold">Date Placed</div>
-          <div className="text-gray-700">{order.timestamp}</div>
+          <div className="text-gray-700">{new Date(order.date).toLocaleDateString()}</div>
         </div>
         <div>
           <div className="font-bold">Order Amount</div>
