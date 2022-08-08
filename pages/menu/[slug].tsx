@@ -1,40 +1,29 @@
-import type { NextPage, GetStaticProps, GetStaticPropsContext, GetStaticPaths, GetStaticPathsContext } from 'next';
-import Image from 'next/image';
+import type { NextPage, GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
+import Image, { ImageProps } from 'next/image';
 import { useRouter } from 'next/router';
 import groq from 'groq';
 import { useNextSanityImage } from 'next-sanity-image';
 import Link from 'next/link';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
-import { GiCoffeeMug as CoffeeCup } from 'react-icons/gi';
 
 import sanityClient from '../../sanityClient';
 import Head from 'next/head';
 import { useContext } from 'react';
 import CartContext from '../../state/cartContext';
 import Price from '../../components/shared/Price';
+import AuthContext from '../../state/authContext';
 
 const MenuDetail: NextPage = (props: any) => {
   const router = useRouter();
   const detail = props.data;
-  const imageProps = useNextSanityImage(sanityClient, detail.image)!;
-  const { dispatch } = useContext(CartContext);
-
-  const renderMessage = (productName: string) => {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="text-4xl mr-4">
-          <CoffeeCup />
-        </div>{' '}
-        <div>
-          Such success! You added <strong>{productName}</strong> to your order.
-        </div>
-      </div>
-    );
-  };
+  const imageProps = useNextSanityImage(sanityClient, detail.image)! as ImageProps;
+  const { addToCart } = useContext(CartContext);
+  const { authUser } = useContext(AuthContext);
 
   const handleAddToOrder = (): void => {
     const orderItem = { ...detail, title: detail.name, quantity: 1 };
-    dispatch({ type: 'ADD_ORDER', payload: orderItem });
+    const addToCartFn = addToCart!;
+    addToCartFn(orderItem)!;
     router.push('/order/review');
   };
 
@@ -64,22 +53,33 @@ const MenuDetail: NextPage = (props: any) => {
             <Image objectFit="contain" className="sm:max-w-md" {...imageProps} layout="intrinsic" alt={detail.name} placeholder="blur" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold mb-6">{detail.name}</h1>
-            <p className="text-2xl mb-12">
+            <h1 className="text-xl sm:text-3xl font-bold mb-6 flex justify-between">
+              <span>{detail.name}</span>
               <Price priceValue={detail.price} />
-            </p>
+            </h1>
+            {/* <p className="text-3xl mb-8 font-bold items-center bg-secondaryOpaque inline-flex text-black py-1 px-4  rounded-sm">
+              
+            </p> */}
             {detail.description && (
-              <>
-                <h3 className="text-xl font-bold mb-6">Description</h3>
-                <p>{detail.description}</p>
-              </>
+              <div className="py-6 border-b border-t border-slate-200">
+                <h3 className="text-lg font-bold mb-2">Description</h3>
+                <p className="text-gray-600">{detail.description}</p>
+              </div>
             )}
-            <div className="flex mt-8 items-end">
-              {/* Add To Order */}
-              <button className="bg-primarydark text-white text-base px-4 py-3 font-bold w-64 rounded-md" type="button" onClick={handleAddToOrder}>
-                Add To Order
-              </button>
-            </div>
+            {/* only show add to order if user is logged in  */}
+            {!authUser && (
+              <p className="text-amber-700 text-sm font-bold bg-amber-100 border-l-[16px] border-amber-800 pl-6 py-4 pr-4 text-left rounded-sm">
+                Only logged in customers can add to order at this time. Please <Link href="/account/login"><a className="underline text-black">Login</a></Link>
+              </p>
+            )}
+            {authUser && (
+              <div className="flex mt-6 items-end">
+                {/* Add To Order */}
+                <button className="dgcf-button min-w-[200px] w-full sm:w-[50%]" type="button" onClick={handleAddToOrder}>
+                  Add To Order
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -87,14 +87,7 @@ const MenuDetail: NextPage = (props: any) => {
   );
 };
 
-interface Drink {
-  name: string;
-  slug: {
-    current: string;
-  };
-}
-
-export const getStaticPaths: GetStaticPaths = async (context: GetStaticPathsContext) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const drinks: any[] = await sanityClient.fetch(groq`
     *[_type == 'drink'] {
       name, slug

@@ -1,9 +1,17 @@
-import React, { useReducer, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import { createContext } from 'react';
 import { useLocalStorage } from 'react-use';
+import { doc, getFirestore, onSnapshot } from 'firebase/firestore';
 
 import { OrderItem } from '../types/OrderItem';
+import { CartService } from '../service/cart.service';
+import AuthContext from './authContext';
+import { app } from '../getFirebaseApp';
+import { calculateSubtotalFromItems, getNumberOfItemsInCart } from '../utils/cart.utils';
+import { User } from '@firebase/auth-types';
+
+const db = getFirestore(app);
 
 type CartProviderProps = {
   children: React.ReactNode;
@@ -13,104 +21,137 @@ type CartState = {
   count: number;
   subtotal: number;
 };
-export type CartAction =
-  | { type: 'ADD_ORDER'; payload: OrderItem }
-  | { type: 'REMOVE_ORDER'; payload: number | string }
-  | { type: 'CALCULATE_SUBTOTAL' }
-  | { type: 'GET_ITEM_COUNT' }
-  | { type: 'CLEAR_ORDER' };
 
-const initialState = {
+const initialCartState = {
   items: [],
   count: 0,
   subtotal: 0
 };
 
-const cartReducer = (state: CartState, action: CartAction) => {
-  switch (action.type) {
-    case 'ADD_ORDER':
-      const currentOrderItem = state.items.find((item: OrderItem) => item.id === action.payload.id);
-
-      if (currentOrderItem) {
-        const updateIndex = state.items.indexOf(currentOrderItem);
-        return {
-          ...state,
-          items: [
-            ...state.items.slice(0, updateIndex),
-            {
-              ...currentOrderItem,
-              quantity: state.items[updateIndex].quantity + action.payload.quantity
-            },
-            ...state.items.slice(updateIndex + 1)
-          ]
-        };
-      }
-
-      return {
-        ...state,
-        items: [...state.items, { ...action.payload }]
-      };
-    case 'REMOVE_ORDER':
-      const ix = state.items.findIndex((item: OrderItem) => item.id === action.payload) ?? -1;
-      if (ix > -1 && typeof state.items !== 'undefined') {
-        const updatedItems = [...state.items.slice(0, ix), ...state.items.slice(ix + 1)];
-        return {
-          ...state,
-          items: updatedItems
-        };
-      }
-      return state;
-    case 'CALCULATE_SUBTOTAL':
-      return {
-        ...state,
-        subtotal: Number(
-          state.items
-            .reduce((acc: number, item: OrderItem) => {
-              acc += item.price * item.quantity;
-              return acc;
-            }, 0)
-            .toFixed(2)
-        )
-      };
-    case 'GET_ITEM_COUNT':
-      return {
-        ...state,
-        count: state.items.reduce((acc: number, item: OrderItem) => {
-          acc += item.quantity;
-          return acc;
-        }, 0)
-      };
-    case 'CLEAR_ORDER':
-      return {
-        ...state,
-        subtotal: 0,
-        items: [],
-        count: 0
-      };
-    default:
-      return { ...state };
-  }
-};
-
 const CartContext = createContext<{
-  state: CartState;
-  dispatch: React.Dispatch<CartAction>;
-}>({ state: initialState, dispatch: () => {} });
+  cart: CartState;
+  isCartLoading: boolean;
+  addToCart?: (orderItem: OrderItem) => Promise<void>;
+  removeFromCart?: (orderItem: OrderItem) => Promise<void>;
+  clearCart?: () => void;
+}>({ cart: initialCartState, isCartLoading: true });
 
 const CartProvider = ({ children }: CartProviderProps) => {
-  const [storageState, setStorageState] = useLocalStorage<CartState>('order', initialState);
-  const [state, dispatch] = useReducer(cartReducer, storageState || initialState);
+  const [cartFromLocalStorage, setCartFromLocalStorage] = useLocalStorage<CartState>('order', initialCartState);
+  const { authUser } = useContext(AuthContext);
+  const [cart, setCart] = useState<CartState>(() => {
+    if (!authUser) return initialCartState;
+    return cartFromLocalStorage ?? initialCartState;
+  });
+  const [isCartLoading, setIsCartLoading] = useState(true);
 
   useEffect(() => {
-    setStorageState(state);
-  }, [state, setStorageState]);
+    let cartSubscribe = () => {};
+    setIsCartLoading(true);
+    if (authUser) {
+      // get initial cart on load for logged in
 
+      CartService.getCart(authUser.uid)
+        .then((cartData) => {
+          setIsCartLoading(false);
+          if (cartData) {
+            const cartState = cartData as CartState;
+            setCart(cartState);
+          } else {
+            setCart(initialCartState);
+          }
+        })
+        .catch((err) => {
+          setIsCartLoading(false);
+          console.error('Unhandled cart error', err.message);
+        });
+
+      // update client cart whenever there are changes in db
+      cartSubscribe = onSnapshot(doc(db, 'cart', authUser.uid), (cartDoc) => {
+        const cartState = cartDoc.data() as CartState;
+        setCart(cartState);
+      });
+    } else {
+      // if user is not signed in we can reset their cart
+      setCart(initialCartState);
+    }
+    return () => cartSubscribe();
+  }, [authUser]);
+
+  // persist anonymous cart in localStorage
   useEffect(() => {
-    dispatch({ type: 'CALCULATE_SUBTOTAL' });
-    dispatch({ type: 'GET_ITEM_COUNT' });
-  }, [state.items]);
+    if (!authUser) {
+      setCartFromLocalStorage(cart);
+      window.setTimeout(() => {
+        setIsCartLoading(false);
+      }, 500);
+    }
+  }, [authUser, cart, setCartFromLocalStorage]);
 
-  return <CartContext.Provider value={{ state, dispatch }}>{children}</CartContext.Provider>;
+  const runUpdateCart = async (orderItems: OrderItem[], user?: User) => {
+    const updatedCart = {
+      items: orderItems,
+      subtotal: calculateSubtotalFromItems(orderItems),
+      count: getNumberOfItemsInCart(orderItems)
+    };
+    // if signed in, store cart in db
+    if (user) {
+      CartService.updateCart(user.uid, updatedCart).then((cart) => {
+        console.log('update cart operation completed. New Cart', cart);
+      });
+    } else {
+      // otherwise, store directly in client state
+      setCart(updatedCart);
+    }
+  };
+
+  const addToCart = async (orderItem: OrderItem) => {
+    const currentOrderItem = cart.items.find((item: OrderItem) => item.id === orderItem.id);
+    let updatedCartItems;
+    if (currentOrderItem) {
+      const updateIndex = cart.items.indexOf(currentOrderItem);
+      updatedCartItems = [
+        ...cart.items.slice(0, updateIndex),
+        {
+          ...currentOrderItem,
+          quantity: cart.items[updateIndex].quantity + (orderItem.quantity || 1)
+        },
+        ...cart.items.slice(updateIndex + 1)
+      ];
+    } else {
+      updatedCartItems = [...cart.items, orderItem];
+    }
+
+    // if signed in, store cart in db
+    if (authUser) {
+      runUpdateCart(updatedCartItems, authUser);
+    } else {
+      runUpdateCart(updatedCartItems);
+    }
+  };
+
+  const removeFromCart = async (orderItem: OrderItem) => {
+    const itemRemoveIndex = cart.items.findIndex((item: OrderItem) => item.id === orderItem.id) ?? -1;
+    if (itemRemoveIndex > -1 && typeof cart.items !== 'undefined') {
+      const productItems = [...cart.items.slice(0, itemRemoveIndex), ...cart.items.slice(itemRemoveIndex + 1)];
+      if (authUser) {
+        runUpdateCart(productItems, authUser);
+      } else {
+        runUpdateCart(productItems);
+      }
+      // if signed in, store cart in db
+    }
+  };
+
+  const clearCart = async () => {
+    if (authUser) {
+      runUpdateCart([], authUser);
+    } else {
+      runUpdateCart([]);
+    }
+  };
+
+  return <CartContext.Provider value={{ cart, isCartLoading, addToCart, removeFromCart, clearCart }}>{children}</CartContext.Provider>;
 };
 
 export default CartContext;

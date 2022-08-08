@@ -7,10 +7,10 @@ type PriceProps = {
 
 const Price: React.FC<PriceProps> = ({ priceValue, decimalPoints = 2 }) => {
   return (
-    <>
-      <sup>$</sup>
+    <div className="inline-flex items-center">
+      <sup className="text-sm">$</sup>
       <span>{Number(priceValue).toFixed(decimalPoints)}</span>
-    </>
+    </div>
   );
 };
 

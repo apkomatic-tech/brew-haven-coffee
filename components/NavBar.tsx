@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -9,10 +9,12 @@ import { HiMenu as MenuIcon, HiX as CloseMenuIcon } from 'react-icons/hi';
 import Logo from '../public/logo.svg';
 import Cup from '../public/cup-outlined.svg';
 import HeaderCartLogin from './HeaderCartLogin';
+import AuthContext from '../state/authContext';
 
 function NavBar() {
   const { pathname } = useRouter();
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const { authUser } = useContext(AuthContext);
   return (
     <div className="flex p-4 items-center">
       <Link href="/" passHref>
@@ -33,7 +35,7 @@ function NavBar() {
             <a className={`hover:text-primary ${pathname === '/about' ? 'text-primarydark' : ''}`}>About</a>
           </Link>
           <Link href="/menu" passHref>
-            <a className="text-black border-2 border-black py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200">
+            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 border-secondary bg-secondary rounded-md">
               <span className="inline-block mr-2">Menu</span> <Image src={Cup} alt="" width={30} height={30} />
             </a>
           </Link>
@@ -45,7 +47,7 @@ function NavBar() {
         <HeaderCartLogin />
         <nav className="flex grid-flow-col-dense gap-4 text-gray-700 font-bold items-center">
           <Link href="/menu">
-            <a className="border-2 border-black py-2 px-4 ml-6 flex items-center hover:opacity-80 duration-200">
+            <a className="text-black border-2 py-1 px-5 flex leading-none items-center hover:opacity-80 duration-200 bg-secondary border-secondary ml-6 rounded-md">
               <span className="inline-block mr-2">Menu</span> <Image src={Cup} alt="" width={30} height={30} />
             </a>
           </Link>
@@ -91,17 +93,10 @@ function NavBar() {
                     Menu
                   </a>
                 </Link>
-                <Link href="/order">
+                <Link href={authUser ? '/account/settings' : '/account/login'}>
                   <a
                     onClick={() => setShowMobileNav(false)}
-                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/order' ? 'bg-primary' : ''}`}>
-                    Order
-                  </a>
-                </Link>
-                <Link href="/login">
-                  <a
-                    onClick={() => setShowMobileNav(false)}
-                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/login' ? 'bg-primary' : ''}`}>
+                    className={`text-center block px-1 py-4 hover:bg-primary transition-colors duration-150 ${pathname === '/account/login' ? 'bg-primary' : ''}`}>
                     Account
                   </a>
                 </Link>

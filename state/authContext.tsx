@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import router, { Router } from 'next/router';
-import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserProfile } from 'firebase/auth';
+import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserProfile, updateCurrentUser, updateProfile } from 'firebase/auth';
 
 import { app } from '../getFirebaseApp';
 import getAuthErrorMessageFromCode from '../utils/getAuthErrorMessageFromCode';
@@ -38,7 +38,7 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   function signIn({ email, password }: { email: string; password: string }) {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        router.push('/account');
+        router.push('/account/settings');
       })
       .catch((err) => {
         setAuthError(getAuthErrorMessageFromCode(err.code));
@@ -49,17 +49,28 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     auth
       .signOut()
       .then(() => {
-        router.push('/login');
+        router.push('/account/login');
       })
       .catch((err) => {
         setAuthError(getAuthErrorMessageFromCode(err.code));
       });
   }
 
-  function createUser({ email, password }: { email: string; password: string }) {
+  function createUser({ email, password, name }: { email: string; password: string; name?: string }) {
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        router.push('/account');
+      .then((authUser) => {
+        // if user didn't provide name, redirect right away on successful registration
+        if (!name) return router.push('/account/settings');
+
+        // otherwise, update user profile with display name, then redirect regardless of success/fail
+        updateProfile(authUser.user, {
+          displayName: name
+        })
+          .then(() => router.push('/account/settings'))
+          .catch((err) => {
+            console.error('update profile error', err.message);
+            router.push('/account/settings');
+          });
       })
       .catch((err) => {
         setAuthError(getAuthErrorMessageFromCode(err.code));

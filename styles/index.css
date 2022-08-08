@@ -15,8 +15,12 @@
   }
 }
 
+body {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
 .page-content {
-  @apply mt-20 mb-16;
+  @apply my-8 sm:my-16;
 }
 .wrapper {
   @apply container px-4 mx-auto max-w-full lg:max-w-7xl;
@@ -29,4 +33,13 @@
 }
 p {
   @apply text-gray-600;
+}
+
+.link {
+  @apply text-primary hover:underline focus:underline active:underline;
+}
+
+
+.dgcf-button {
+  @apply text-white font-bold bg-primary rounded-md p-3 text-center no-underline transition-colors hover:bg-primarydark active:bg-primarydark focus:bg-primarydark disabled:bg-primaryOpaque disabled:cursor-not-allowed;
 }

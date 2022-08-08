@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -8,8 +8,19 @@ import OrderLineItem from '../../components/OrderLineItem';
 import styles from './reviewOrder.module.css';
 
 const Order: NextPage = () => {
-  const { state } = useContext(CartContext);
-  const { items: orderItems, subtotal } = state;
+  const { cart, isCartLoading } = useContext(CartContext);
+  const { items: orderItems, subtotal } = cart;
+
+  if (isCartLoading) {
+    return (
+      <div>
+        <Head>
+          <title>Doge Coffee | Review Your Order</title>
+        </Head>
+        <div className="page-content mx-auto max-w-4xl px-8 md:px-2 text-left">Loading cart...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -22,7 +33,7 @@ const Order: NextPage = () => {
           <div className={styles.emptyOrder}>
             Your order contains no items.
             <Link href="/menu" passHref>
-              <a className="bg-primary text-white p-2 block max-w-xs mx-auto mt-4">Explore Menu</a>
+              <a className="dgcf-button block max-w-xs mx-auto mt-4">Explore Menu</a>
             </Link>
           </div>
         )}
@@ -39,12 +50,10 @@ const Order: NextPage = () => {
                   <h3 className="font-bold text-xl">Subtotal</h3>
                   <p className="text-gray-600">Taxes will be calculated at checkout</p>
                 </div>
-                <div className="font-bold text-xl">${subtotal}</div>
+                <div className="font-bold text-xl">${subtotal.toFixed(2)}</div>
               </div>
               <Link href="/order/payment">
-                <a className="font-bold rounded-sm bg-primary text-white px-3 py-3 text-center w-full block opacity-100 hover:opacity-90 transition transition-opacity md:ml-auto md:w-72">
-                  Proceed to Payment
-                </a>
+                <a className="dgcf-button w-full block transition md:ml-auto md:w-72">Proceed to Payment</a>
               </Link>
             </div>
           </div>

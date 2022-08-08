@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -12,6 +12,9 @@ import OrderSummaryItem from '../../components/OrderSummaryItem';
 
 import styles from './payment.module.css';
 import { BiErrorCircle } from 'react-icons/bi';
+import Link from 'next/link';
+import { CartService } from '../../service/cart.service';
+import AuthContext from '../../state/authContext';
 
 interface IFormData {
   firstName: string;
@@ -34,22 +37,29 @@ const schema = yup.object().shape({
 });
 
 const Payment: NextPage = () => {
+  const { authUser } = useContext(AuthContext);
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<IFormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: {
+      emailAddress: authUser?.email ?? ''
+    }
   });
   const [paymentError, setPaymentError] = useState<null | string>(null);
-  const { state, dispatch } = useContext(CartContext);
-  const { items: orderItems } = state;
+  const { cart, clearCart } = useContext(CartContext);
+  const { items: orderItems } = cart;
   const serviceFee: number = 0.1;
+  const orderSubtotal = cart.subtotal.toFixed(2);
+  const orderTotal = useMemo(() => (cart.subtotal + cart.subtotal * serviceFee).toFixed(2), [cart.subtotal]);
+  const disabledPaymentButton = orderItems.length === 0;
 
   function processOrder(customerData: IFormData) {
     const orderData = {
-      total: state.subtotal + state.subtotal * serviceFee,
+      total: Number(orderTotal),
       items: orderItems
     };
 
@@ -66,28 +76,37 @@ const Payment: NextPage = () => {
       }
     })
       .then((res: any) => res.json())
-      .then((res: any) => {
+      .then((res) => {
         if (!res.isSuccess) {
           setPaymentError(res.errors);
           return;
         }
-        setPaymentError(null);
-        // on succesfull order, we want to reset cart
-        dispatch({ type: 'CLEAR_ORDER' });
-        // TODO: create order confirmation page
-        router.push('/menu');
+
+        CartService.createOrder({
+          total: Number(orderData.total),
+          userId: authUser ? authUser.uid : '',
+          items: orderData.items,
+          firstName: customerData.firstName,
+          lastName: customerData.lastName,
+          date: Date.now()
+        })
+          .then(() => {
+            setPaymentError(null);
+            // on succesfull order, we want to clear cart
+            const clearCustomerCart = clearCart!;
+            clearCustomerCart();
+            // TODO: create order confirmation page
+            router.push('/menu');
+          })
+          .catch((err) => {
+            setPaymentError(err.message);
+          });
       })
       .catch((err) => {
         console.error(err.message);
         setPaymentError('Sorry, we are not able to process your request, please try again');
       });
   }
-
-  useEffect(() => {
-    if (!orderItems.length) {
-      router.push('/menu');
-    }
-  }, [orderItems.length, router]);
 
   return (
     <>
@@ -168,20 +187,25 @@ const Payment: NextPage = () => {
 
             {/* summary block */}
             <div>
+              <div className="text-right translate-y-6">
+                <Link href="/order/review" passHref>
+                  <a className="link">Edit Order</a>
+                </Link>
+              </div>
               <h3 className="text-xl mb-7 font-bold">Order summary</h3>
               <div className={styles.summaryBlock}>
                 {orderItems.map((item: OrderItem) => (
-                  <OrderSummaryItem key={item.id} item={item} removeFromOrder={() => dispatch({ type: 'REMOVE_ORDER', payload: item.id })} />
+                  <OrderSummaryItem key={item.id} item={item} />
                 ))}
                 <div className="p-6">
                   <div className="flex justify-between py-3">
-                    Subtotal <span>${state.subtotal.toFixed(2)}</span>
+                    Subtotal <span>${orderSubtotal}</span>
                   </div>
                   <div className="flex justify-between py-3">
                     Service Fee <span>{(serviceFee * 100).toFixed(2)}%</span>
                   </div>
                   <div className="flex justify-between font-bold border-t borer-gray-300 text-lg py-4">
-                    Total <span>${(state.subtotal + state.subtotal * serviceFee).toFixed(2)}</span>
+                    Total <span>${orderTotal}</span>
                   </div>
                 </div>
 
@@ -194,7 +218,7 @@ const Payment: NextPage = () => {
                   </div>
                 )}
                 <div className="border-t border-gray-300 p-6">
-                  <button type="submit" className="bg-primarydark text-white text-center py-3 px-12 w-full">
+                  <button type="submit" disabled={disabledPaymentButton} className="dgcf-button w-full">
                     Place Order
                   </button>
                 </div>
