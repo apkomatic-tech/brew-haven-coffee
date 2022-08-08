@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 import { useNextSanityImage, UseNextSanityImageProps } from 'next-sanity-image';
 import client from '../sanityClient';
 import Price from './shared/Price';
@@ -14,7 +14,7 @@ interface IMenuCard {
 }
 
 const MenuCard: React.FC<IMenuCard> = ({ image, title, slug, price }) => {
-  const imageProps = useNextSanityImage(client, image)!;
+  const imageProps = useNextSanityImage(client, image)! as ImageProps;
   return (
     <Link href={`/menu/${slug}`} passHref>
       <a className="flex flex-col items-center h-full">
