@@ -5,7 +5,6 @@ import NavBar from './NavBar';
 import FacebookIcon from '../public/social-icons/facebook.svg';
 import InstagramIcon from '../public/social-icons/instagram.svg';
 import TwitterIcon from '../public/social-icons/twitter.svg';
-import YouTubeIcon from '../public/social-icons/youtube.svg';
 import Image from 'next/image';
 
 interface ILayout {
@@ -23,8 +22,10 @@ const Layout: React.FC<ILayout> = ({ title, children }) => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="page">
-        <header className="container mx-auto max-w-full lg:max-w-7xl bg-mainBgColor">
-          <NavBar />
+        <header className="bg-mainBgColor">
+          <div className="container mx-auto max-w-full lg:max-w-7xl">
+            <NavBar />
+          </div>
         </header>
         <main>{children}</main>
         <footer className="my-10">
