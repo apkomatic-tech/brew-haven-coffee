@@ -45,10 +45,9 @@ const Order: NextPage = () => {
               ))}
             </div>
             <div className="mb-24 pt-6">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-6 p-6 bg-slate-50">
                 <div>
                   <h3 className="font-bold text-xl">Subtotal</h3>
-                  <p className="text-gray-600">Taxes will be calculated at checkout</p>
                 </div>
                 <div className="font-bold text-xl">${subtotal.toFixed(2)}</div>
               </div>

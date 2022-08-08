@@ -1,6 +1,5 @@
-import { collection, doc, DocumentData, getDoc, getDocs, getFirestore, query, setDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from 'firebase/firestore';
 import { v4 as uuid } from 'uuid';
-('uuid');
 
 import { app } from '../getFirebaseApp';
 import { Order } from '../types/Order';
