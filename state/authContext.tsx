@@ -1,10 +1,10 @@
 import { createContext, useEffect, useState } from 'react';
 import router, { Router } from 'next/router';
-import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserProfile, updateCurrentUser, updateProfile } from 'firebase/auth';
+import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 import { app } from '../getFirebaseApp';
 import getAuthErrorMessageFromCode from '../utils/getAuthErrorMessageFromCode';
-import { User, UserCredential } from '@firebase/auth-types';
+import { User } from '@firebase/auth-types';
 
 // initialize auth
 const auth = getAuth(app);
@@ -16,6 +16,7 @@ type AuthContextProps = {
   signIn: any;
   signOut: any;
   createUser: any;
+  signInWithGooglePopup: any;
 };
 
 const AuthContext = createContext<AuthContextProps>({
@@ -23,8 +24,12 @@ const AuthContext = createContext<AuthContextProps>({
   authError: '',
   signIn: () => {},
   signOut: () => {},
-  createUser: () => {}
+  createUser: () => {},
+  signInWithGooglePopup: () => {}
 });
+
+// authentication providers
+const googleProvider = new GoogleAuthProvider();
 
 // create provider
 type AuthContextProviderProps = {
@@ -77,6 +82,17 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       });
   }
 
+  function signInWithGooglePopup() {
+    signInWithPopup(auth, googleProvider)
+        .then(() => {
+          router.push('/account/settings');
+        })
+        .catch((err) => {
+          setAuthError(getAuthErrorMessageFromCode(err.code));
+        });
+
+  }
+
   useEffect(() => {
     Router.events.on('routeChangeStart', () => {
       setAuthError('');
@@ -90,7 +106,7 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     });
   }, []);
 
-  return <AuthContext.Provider value={{ authUser: user, authError, signIn, signOut, createUser }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ authUser: user, authError, signIn, signOut, createUser, signInWithGooglePopup }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;
