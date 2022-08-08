@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { BiErrorCircle } from 'react-icons/bi';
 
-import AuthContext from '../state/authContext';
 import combineClasses from '../utils/combineClasses';
 
 const EMAIL_REGX = /(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/gm;
@@ -80,7 +79,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ submitButtonText, authError, handle
           {formErrors.password?.type === 'required' && <div className="font-bold text-sm text-red-700">Password is required.</div>}
           {formErrors.password?.type === 'minLength' && <div className="font-bold text-sm text-red-700">Password must contain at least 6 characters.</div>}
         </div>
-        <button type="submit" className="block w-full bg-primarydark text-white p-2 rounded-md">
+        <button type="submit" className="dgcf-button block w-full">
           {submitButtonText}
         </button>
       </form>
