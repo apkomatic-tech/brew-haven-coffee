@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -15,6 +15,7 @@ import { BiErrorCircle } from 'react-icons/bi';
 import Link from 'next/link';
 import { CartService } from '../../service/cart.service';
 import AuthContext from '../../state/authContext';
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 interface IFormData {
   firstName: string;
@@ -37,6 +38,11 @@ const schema = yup.object().shape({
 });
 
 const Payment: NextPage = () => {
+  // stripe
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessingPayment, setIsPromisingPayment] = useState(false);
+
   const { authUser } = useContext(AuthContext);
   const router = useRouter();
   const {
@@ -57,55 +63,64 @@ const Payment: NextPage = () => {
   const orderTotal = useMemo(() => (cart.subtotal + cart.subtotal * serviceFee).toFixed(2), [cart.subtotal]);
   const disabledPaymentButton = orderItems.length === 0;
 
-  function processOrder(customerData: IFormData) {
-    const orderData = {
-      total: Number(orderTotal),
-      items: orderItems
-    };
+  async function processOrder(customerData: IFormData) {
+    if (!stripe || !elements) return;
 
-    const paymentData = {
-      ...customerData,
-      ...orderData
-    };
-
-    fetch('/api/order', {
-      body: JSON.stringify(paymentData),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+    await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: '/'
       }
-    })
-      .then((res: any) => res.json())
-      .then((res) => {
-        if (!res.isSuccess) {
-          setPaymentError(res.errors);
-          return;
-        }
+    });
 
-        CartService.createOrder({
-          total: Number(orderData.total),
-          userId: authUser ? authUser.uid : '',
-          items: orderData.items,
-          firstName: customerData.firstName,
-          lastName: customerData.lastName,
-          date: Date.now()
-        })
-          .then(() => {
-            setPaymentError(null);
-            // on succesfull order, we want to clear cart
-            const clearCustomerCart = clearCart!;
-            clearCustomerCart();
-            // TODO: create order confirmation page
-            router.push('/menu');
-          })
-          .catch((err) => {
-            setPaymentError(err.message);
-          });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        setPaymentError('Sorry, we are not able to process your request, please try again');
-      });
+    // const orderData = {
+    //   total: Number(orderTotal),
+    //   items: orderItems
+    // };
+
+    // const paymentData = {
+    //   ...customerData,
+    //   ...orderData
+    // };
+
+    // fetch('/api/order', {
+    //   body: JSON.stringify(paymentData),
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    //   .then((res: any) => res.json())
+    //   .then((res) => {
+    //     if (!res.isSuccess) {
+    //       setPaymentError(res.errors);
+    //       return;
+    //     }
+
+    //     CartService.createOrder({
+    //       total: Number(orderData.total),
+    //       userId: authUser ? authUser.uid : '',
+    //       items: orderData.items,
+    //       firstName: customerData.firstName,
+    //       lastName: customerData.lastName,
+    //       date: Date.now()
+    //     })
+    //       .then(() => {
+    //         setPaymentError(null);
+    //         // on succesfull order, we want to clear cart
+    //         const clearCustomerCart = clearCart!;
+    //         clearCustomerCart();
+    //         // TODO: create order confirmation page
+    //         router.push('/menu');
+    //       })
+    //       .catch((err) => {
+    //         setPaymentError(err.message);
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.error(err.message);
+    //     setPaymentError('Sorry, we are not able to process your request, please try again');
+    //   });
   }
 
   return (
@@ -217,6 +232,10 @@ const Payment: NextPage = () => {
                     <span>{paymentError}</span>
                   </div>
                 )}
+
+                {/* Stripe Payment Form */}
+                {stripe && elements && <PaymentElement />}
+
                 <div className="border-t border-gray-300 p-6">
                   <button type="submit" disabled={disabledPaymentButton} className="dgcf-button w-full">
                     Place Order
