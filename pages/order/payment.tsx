@@ -41,7 +41,7 @@ const Payment: NextPage = () => {
   // stripe
   const stripe = useStripe();
   const elements = useElements();
-  const [isProcessingPayment, setIsPromisingPayment] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const { authUser } = useContext(AuthContext);
   const router = useRouter();
@@ -61,17 +61,22 @@ const Payment: NextPage = () => {
   const serviceFee: number = 0.1;
   const orderSubtotal = cart.subtotal.toFixed(2);
   const orderTotal = useMemo(() => (cart.subtotal + cart.subtotal * serviceFee).toFixed(2), [cart.subtotal]);
-  const disabledPaymentButton = orderItems.length === 0;
+  const disabledPaymentButton = orderItems.length === 0 || isProcessingPayment;
 
   async function processOrder(customerData: IFormData) {
     if (!stripe || !elements) return;
 
+    setIsProcessingPayment(true);
+
     await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: '/'
+        // TODO:: change to order confirmation page
+        return_url: 'http://localhost:3000'
       }
     });
+
+    setIsProcessingPayment(false);
 
     // const orderData = {
     //   total: Number(orderTotal),
@@ -198,6 +203,30 @@ const Payment: NextPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Payment block */}
+              <h3 className="text-xl mt-12 mb-7 font-bold">Payment Information</h3>
+              <div>
+                {paymentError && (
+                  <div className="p-4 bg-red-200 text-center mb-4 text-red-900 flex items-center text-sm border-l-4 border-red-800">
+                    <span className="mr-2 text-xl">
+                      <BiErrorCircle />
+                    </span>
+                    <span>{paymentError}</span>
+                  </div>
+                )}
+
+                <div className="my-6">
+                  {/* Stripe Payment Form */}
+                  {stripe && elements && <PaymentElement />}
+                </div>
+
+                <div className="border-t border-gray-300 my-6 pt-6">
+                  <button type="submit" disabled={disabledPaymentButton} className="dgcf-button w-full">
+                    {isProcessingPayment ? 'Processing...' : 'Place Order'}
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* summary block */}
@@ -222,24 +251,6 @@ const Payment: NextPage = () => {
                   <div className="flex justify-between font-bold border-t borer-gray-300 text-lg py-4">
                     Total <span>${orderTotal}</span>
                   </div>
-                </div>
-
-                {paymentError && (
-                  <div className="p-4 bg-red-200 text-center mb-4 text-red-900 flex items-center text-sm border-l-4 border-red-800">
-                    <span className="mr-2 text-xl">
-                      <BiErrorCircle />
-                    </span>
-                    <span>{paymentError}</span>
-                  </div>
-                )}
-
-                {/* Stripe Payment Form */}
-                {stripe && elements && <PaymentElement />}
-
-                <div className="border-t border-gray-300 p-6">
-                  <button type="submit" disabled={disabledPaymentButton} className="dgcf-button w-full">
-                    Place Order
-                  </button>
                 </div>
               </div>
             </div>

@@ -50,6 +50,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     });
   }, []);
 
+  /* 
+    TODO: create PaymentProvider to wrap app,
+    but below cart provider to get subtotal from cart
+  */
+
   return (
     <AuthContextProvider>
       <CartProvider>
