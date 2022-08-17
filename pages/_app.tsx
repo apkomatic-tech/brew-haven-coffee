@@ -29,45 +29,11 @@ Router.events.on('routeChangeError', () => {
 // const analytics = getAnalytics(app);
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [clientSecret, setClientSecret] = useState('');
-  async function getStripeClientSecret() {
-    const paymentIntent = await fetch('/api/payment-intent', {
-      body: JSON.stringify({ amount: 5000 }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => res.json());
-
-    const { clientSecret } = paymentIntent;
-    return clientSecret;
-  }
-
-  useEffect(() => {
-    getStripeClientSecret().then((secret) => {
-      console.log('clientSecret', secret);
-      setClientSecret(secret);
-    });
-  }, []);
-
-  /* 
-    TODO: create PaymentProvider to wrap app,
-    but below cart provider to get subtotal from cart
-  */
-
   return (
     <AuthContextProvider>
       <CartProvider>
         <Layout>
-          {clientSecret && (
-            <Elements
-              options={{
-                clientSecret
-              }}
-              stripe={stripePromise}>
-              <Component {...pageProps} />
-            </Elements>
-          )}
+          <Component {...pageProps} />
         </Layout>
       </CartProvider>
     </AuthContextProvider>

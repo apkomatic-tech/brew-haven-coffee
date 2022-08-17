@@ -1,0 +1,3 @@
+const ORDER_SERVICE_FEE = 0.1;
+
+export { ORDER_SERVICE_FEE };

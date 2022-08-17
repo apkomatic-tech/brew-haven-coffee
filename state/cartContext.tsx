@@ -33,8 +33,8 @@ const CartContext = createContext<{
   isCartLoading: boolean;
   addToCart?: (orderItem: OrderItem) => Promise<void>;
   removeFromCart?: (orderItem: OrderItem) => Promise<void>;
-  clearCart?: () => void;
-}>({ cart: initialCartState, isCartLoading: true });
+  clearCart: () => void;
+}>({ cart: initialCartState, isCartLoading: true, clearCart: () => {} });
 
 const CartProvider = ({ children }: CartProviderProps) => {
   const [cartFromLocalStorage, setCartFromLocalStorage] = useLocalStorage<CartState>('order', initialCartState);

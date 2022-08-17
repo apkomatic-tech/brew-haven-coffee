@@ -4,8 +4,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import CartContext from '../../state/cartContext';
 import OrderLineItem from '../../components/OrderLineItem';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import styles from './reviewOrder.module.css';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 const Order: NextPage = () => {
   const { cart, isCartLoading } = useContext(CartContext);
@@ -17,7 +19,37 @@ const Order: NextPage = () => {
         <Head>
           <title>Doge Coffee | Review Your Order</title>
         </Head>
-        <div className="page-content mx-auto max-w-4xl px-8 md:px-2 text-left">Loading cart...</div>
+        <div className="page-content mx-auto max-w-4xl px-8 md:px-2 text-left">
+          <SkeletonTheme baseColor="rgb(241 245 249)" duration={1.1}>
+            <div className="grid gap-2 mb-4 md:grid-flow-col">
+              <div className="col-span-1">
+                <Skeleton height={167} width={167} />
+              </div>
+              <div className="col-span-11">
+                <Skeleton height={30} className="mb-4" />
+                <Skeleton height={50} />
+              </div>
+            </div>
+            <div className="grid gap-2 mb-4 md:grid-flow-col">
+              <div className="col-span-1">
+                <Skeleton height={167} width={167} />
+              </div>
+              <div className="col-span-11">
+                <Skeleton height={30} className="mb-4" />
+                <Skeleton height={50} />
+              </div>
+            </div>
+            <div className="grid gap-2 mb-4 md:grid-flow-col">
+              <div className="col-span-1">
+                <Skeleton height={167} width={167} />
+              </div>
+              <div className="col-span-11">
+                <Skeleton height={30} className="mb-4" />
+                <Skeleton height={50} />
+              </div>
+            </div>
+          </SkeletonTheme>
+        </div>
       </div>
     );
   }
