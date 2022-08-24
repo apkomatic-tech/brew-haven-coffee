@@ -1,43 +1,19 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Elements } from '@stripe/react-stripe-js';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
-import CartContext from '../../state/cartContext';
-import AuthContext from '../../state/authContext';
 import { stripePromise } from '../../utils/stripe.utils';
 import PaymentForm from '../../components/payment/PaymentForm';
 
 import 'react-loading-skeleton/dist/skeleton.css';
-import { Order } from '@stripe/stripe-js';
-import { OrderItem } from '../../types/OrderItem';
+import { PaymentContext } from '../../state/paymentContext';
 
 const Payment = () => {
   const router = useRouter();
-  const { cart } = useContext(CartContext);
-  const { authUser } = useContext(AuthContext);
-  const [clientSecret, setClientSecret] = useState('');
   const orderPlaced = useRef(false);
-
-  useEffect(() => {
-    async function getStripeClientSecret(items: OrderItem[]) {
-      const paymentIntent = await fetch('/api/payment-intent', {
-        body: JSON.stringify({ items, customer: authUser?.displayName }),
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((res) => res.json());
-
-      return paymentIntent.clientSecret;
-    }
-
-    if (clientSecret || cart.items.length === 0) return;
-    getStripeClientSecret(cart.items).then((secret) => {
-      setClientSecret(secret);
-    });
-  }, [clientSecret, cart.items]);
+  const { clientSecret } = useContext(PaymentContext);
 
   return (
     <>

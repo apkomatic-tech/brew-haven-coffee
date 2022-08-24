@@ -46,8 +46,6 @@ const PaymentForm = ({ handleSuccessfulPayment }: PaymentFormProps) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | undefined>('');
 
-  // router
-  const router = useRouter();
   // context
   const { authUser } = useContext(AuthContext);
   const { cart, clearCart } = useContext(CartContext);

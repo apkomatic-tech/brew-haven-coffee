@@ -7,6 +7,8 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 require('dotenv').config();
 
 function calculateOrderAmount(items: OrderItem[]) {
+  console.log(items);
+
   const amount = items.reduce((total, item) => {
     if (item.quantity === 1) {
       total += item.price;
@@ -15,15 +17,24 @@ function calculateOrderAmount(items: OrderItem[]) {
     }
     return total;
   }, 0);
-  const result = (amount + amount * ORDER_SERVICE_FEE) * 1000;
-  return result;
+  const result = amount + amount * ORDER_SERVICE_FEE;
+  // convert to cents for stripe
+  return Number((result * 100).toFixed(0));
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { items, customer } = req.body;
+    const { items } = req.body;
+
+    if (!items.length) {
+      return res.status(200).send({
+        clientSecret: ''
+      });
+    }
+
+    const orderAmount = calculateOrderAmount(items);
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: calculateOrderAmount(items),
+      amount: orderAmount,
       currency: 'usd',
       automatic_payment_methods: {
         enabled: true
