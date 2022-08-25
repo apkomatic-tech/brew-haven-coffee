@@ -40,35 +40,33 @@ const OrderConfirmationMessage = ({ paymentIntentSecret }: { paymentIntentSecret
     getPaymentIntent(paymentIntentSecret);
   }, [stripe, paymentIntentSecret]);
 
-  return <div>{statusMessage && <p>{statusMessage}</p>}</div>;
+  return <p className="p-4 font-bold bg-slate-100">{statusMessage || ''}</p>;
 };
 
 const OrderConfirmationPage = () => {
-  const { clientSecret } = useContext(PaymentContext);
   const [paymentIntentSecret, setPaymentIntentSecret] = useState('');
   useEffect(() => {
-    const secret = new URLSearchParams(window.location.search).get('payment_intent_secret');
-    setPaymentIntentSecret(secret || '');
+    const secret = new URLSearchParams(window.location.search).get('payment_intent_secret') || '';
+    setPaymentIntentSecret(secret);
   }, []);
   return (
-    <div>
-      <Elements
-        stripe={stripePromise}
-        options={{
-          clientSecret
-        }}>
-        {' '}
-        <OrderConfirmationMessage paymentIntentSecret={paymentIntentSecret} />
-      </Elements>
-      {/* {clientSecret && (
+    <div className="page-content wrapper">
+      {paymentIntentSecret ? (
         <Elements
           stripe={stripePromise}
           options={{
-            clientSecret
+            clientSecret: paymentIntentSecret
           }}>
-            
-          </Elements>
-      )} */}
+          {' '}
+          <h1 className="font-bold text-3xl mb-4">Payment Status</h1>
+          <OrderConfirmationMessage paymentIntentSecret={paymentIntentSecret} />
+        </Elements>
+      ) : (
+        <>
+          <h1 className="font-bold text-3xl mb-4">Payment Status</h1>
+          <p className="text-red-600 font-bold bg-red-100 p-4">Error: Missing Payment Information</p>
+        </>
+      )}
     </div>
   );
 };
