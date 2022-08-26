@@ -1,7 +1,13 @@
-import { Elements, useElements, useStripe } from '@stripe/react-stripe-js';
-import { useContext, useEffect, useState } from 'react';
-import { PaymentContext } from '../../state/paymentContext';
+import { Elements, useStripe } from '@stripe/react-stripe-js';
+import { useEffect, useState } from 'react';
 import { stripePromise } from '../../utils/stripe.utils';
+
+enum StatusMessage {
+  SUCCESS = 'Payment succeeded',
+  PROCESSING = 'Your payment is processing',
+  FAIL = 'Your payment was not successful, please try again',
+  UNKNOWN = 'Something went wrong'
+}
 
 const OrderConfirmationMessage = ({ paymentIntentSecret }: { paymentIntentSecret: string }) => {
   const stripe = useStripe();
@@ -17,16 +23,16 @@ const OrderConfirmationMessage = ({ paymentIntentSecret }: { paymentIntentSecret
 
       switch (response?.paymentIntent?.status) {
         case 'succeeded':
-          setStatusMessage('Payment succeeded!');
+          setStatusMessage(StatusMessage.SUCCESS);
           break;
         case 'processing':
-          setStatusMessage('Your payment is processing.');
+          setStatusMessage(StatusMessage.PROCESSING);
           break;
         case 'requires_payment_method':
-          setStatusMessage('Your payment was not successful, please try again.');
+          setStatusMessage(StatusMessage.FAIL);
           break;
         default:
-          setStatusMessage('Something went wrong.');
+          setStatusMessage(StatusMessage.UNKNOWN);
           break;
       }
     }
@@ -39,6 +45,8 @@ const OrderConfirmationMessage = ({ paymentIntentSecret }: { paymentIntentSecret
 
     getPaymentIntent(paymentIntentSecret);
   }, [stripe, paymentIntentSecret]);
+
+  if (loading) return <p>Loading...</p>;
 
   return <p className="p-4 font-bold bg-slate-100">{statusMessage || ''}</p>;
 };
@@ -64,7 +72,7 @@ const OrderConfirmationPage = () => {
       ) : (
         <>
           <h1 className="font-bold text-3xl mb-4">Payment Status</h1>
-          <p className="text-red-600 font-bold bg-red-100 p-4">Error: Missing Payment Information</p>
+          <p className="text-red-600 font-bold bg-red-100 p-4">{StatusMessage.UNKNOWN}</p>
         </>
       )}
     </div>
