@@ -28,7 +28,7 @@ interface IFormData {
 }
 
 interface PaymentFormProps {
-  handleSuccessfulPayment: (clientSecret: string | null, orderId: string | null) => void;
+  handleSuccessfulPayment: (clientSecret?: string, orderId?: string) => void;
 }
 
 // validation
@@ -95,10 +95,11 @@ const PaymentForm = ({ handleSuccessfulPayment }: PaymentFormProps) => {
           lastName: customerData.lastName,
           date: Date.now()
         });
+
         // reset any payment errors and clear cart
         setPaymentError('');
         clearCart();
-        handleSuccessfulPayment(paymentIntent.client_secret, orderId);
+        handleSuccessfulPayment(paymentIntent?.client_secret ?? '', orderId);
       } catch (err) {
         console.error('store order unhandled error', { err });
       }
