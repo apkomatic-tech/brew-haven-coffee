@@ -40,12 +40,18 @@ const Payment = () => {
               clientSecret
             }}>
             <PaymentForm
-              handleSuccessfulPayment={(paymentIntentSecret) => {
-                if (!paymentIntentSecret) return;
+              handleSuccessfulPayment={(paymentIntentSecret, orderId) => {
+                if (!paymentIntentSecret || !orderId) {
+                  console.error('Missing order information');
+                  return;
+                }
                 orderPlaced.current = true;
-                router.replace('/order/confirmation', {
+                // navigate to order confirmation page with payment intent secret and order #
+                router.replace({
+                  pathname: '/order/confirmation',
                   query: {
-                    payment_intent_secret: paymentIntentSecret
+                    payment_intent_secret: paymentIntentSecret,
+                    order: orderId
                   }
                 });
               }}

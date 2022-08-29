@@ -43,11 +43,10 @@ export class CartService {
     } catch (err) {}
   }
 
-  static async createOrder(order: Order) {
-    const orderId = uuid();
-    order.id = orderId;
+  static async createOrder(id: string, order: Order) {
+    order.id = id;
     try {
-      await setDoc(doc(db, 'order', orderId), order);
+      await setDoc(doc(db, 'order', id), order);
     } catch (err) {}
   }
 
@@ -69,5 +68,21 @@ export class CartService {
       orders.push(order);
     });
     return orders;
+  }
+
+  static async getOrderDetails(orderId: string) {
+    try {
+      const orderRef = doc(db, 'order', orderId);
+      const orderDoc = await getDoc(orderRef);
+      if (orderDoc.exists()) {
+        const order = orderDoc.data();
+        return order;
+      } else {
+        return null;
+      }
+    } catch (error: any) {
+      console.error('Unhandled Order Detail Error', error.message);
+      return null;
+    }
   }
 }

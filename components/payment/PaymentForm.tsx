@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useState, useContext, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiErrorCircle } from 'react-icons/bi';
+import { v4 as uuid } from 'uuid';
+
 import AuthContext from '../../state/authContext';
 import CartContext from '../../state/cartContext';
 import { OrderItem } from '../../types/OrderItem';
@@ -13,7 +15,6 @@ import OrderSummaryItem from '../OrderSummaryItem';
 // TODO: refactor - create styled componnents instead of importing css module
 import styles from '../../pages/order/payment.module.css';
 import { CartService } from '../../service/cart.service';
-import { useRouter } from 'next/router';
 import { ORDER_SERVICE_FEE } from '../../config/cart.config';
 
 interface IFormData {
@@ -27,7 +28,7 @@ interface IFormData {
 }
 
 interface PaymentFormProps {
-  handleSuccessfulPayment: (clientSecret: string | null) => void;
+  handleSuccessfulPayment: (clientSecret: string | null, orderId: string | null) => void;
 }
 
 // validation
@@ -84,13 +85,9 @@ const PaymentForm = ({ handleSuccessfulPayment }: PaymentFormProps) => {
         items: orderItems
       };
 
-      const paymentData = {
-        ...customerData,
-        ...orderData
-      };
-
       try {
-        await CartService.createOrder({
+        const orderId = uuid();
+        await CartService.createOrder(orderId, {
           total: Number(orderData.total),
           userId: authUser ? authUser.uid : '',
           items: orderData.items,
@@ -101,7 +98,7 @@ const PaymentForm = ({ handleSuccessfulPayment }: PaymentFormProps) => {
         // reset any payment errors and clear cart
         setPaymentError('');
         clearCart();
-        handleSuccessfulPayment(paymentIntent.client_secret);
+        handleSuccessfulPayment(paymentIntent.client_secret, orderId);
       } catch (err) {
         console.error('store order unhandled error', { err });
       }
