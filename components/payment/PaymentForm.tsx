@@ -208,6 +208,7 @@ const PaymentForm = ({ handleSuccessfulPayment }: PaymentFormProps) => {
             </div>
           </div>
           {/* Payment block */}
+          <h3 className="text-xl mt-8 mb-7 font-bold">Payment Information</h3>
           <div className="mt-6">
             {paymentError && (
               <div className="p-4 bg-red-200 text-center mb-4 text-red-900 flex items-center text-sm border-l-4 border-red-800">

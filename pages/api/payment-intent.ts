@@ -7,8 +7,6 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 require('dotenv').config();
 
 function calculateOrderAmount(items: OrderItem[]) {
-  console.log(items);
-
   const amount = items.reduce((total, item) => {
     if (item.quantity === 1) {
       total += item.price;
@@ -45,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       clientSecret: paymentIntent.client_secret
     });
   } catch (error) {
-    console.log('Stripe Payment Intent Error', { error });
+    console.error('Stripe Payment Intent Error', { error });
     res.status(400).send({ error });
   }
 }
