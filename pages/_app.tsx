@@ -5,10 +5,14 @@ import NProgress from 'nprogress';
 import Layout from '../components/Layout';
 import { CartProvider } from '../state/cartContext';
 import { AuthContextProvider } from '../state/authContext';
+import { Elements } from '@stripe/react-stripe-js';
 
 import '../styles/index.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/nprogress-custom.css';
+import { stripePromise } from '../utils/stripe.utils';
+import { useEffect, useState } from 'react';
+import PaymentProvider from '../state/paymentContext';
 
 NProgress.configure({
   showSpinner: false
@@ -29,9 +33,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthContextProvider>
       <CartProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <PaymentProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </PaymentProvider>
       </CartProvider>
     </AuthContextProvider>
   );

@@ -33,8 +33,8 @@ const CartContext = createContext<{
   isCartLoading: boolean;
   addToCart?: (orderItem: OrderItem) => Promise<void>;
   removeFromCart?: (orderItem: OrderItem) => Promise<void>;
-  clearCart?: () => void;
-}>({ cart: initialCartState, isCartLoading: true });
+  clearCart: () => void;
+}>({ cart: initialCartState, isCartLoading: true, clearCart: () => {} });
 
 const CartProvider = ({ children }: CartProviderProps) => {
   const [cartFromLocalStorage, setCartFromLocalStorage] = useLocalStorage<CartState>('order', initialCartState);
@@ -96,9 +96,7 @@ const CartProvider = ({ children }: CartProviderProps) => {
     };
     // if signed in, store cart in db
     if (user) {
-      CartService.updateCart(user.uid, updatedCart).then((cart) => {
-        console.log('update cart operation completed. New Cart', cart);
-      });
+      CartService.updateCart(user.uid, updatedCart);
     } else {
       // otherwise, store directly in client state
       setCart(updatedCart);

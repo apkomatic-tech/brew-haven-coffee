@@ -12,9 +12,15 @@ import OrderHistoryItem from '../../components/account/OrderHistoryItem';
 import AccountNav from '../../components/account/AccountNav';
 
 const Account: NextPage = () => {
-  const { authUser, signOut } = useContext(AuthContext);
+  const { authUser } = useContext(AuthContext);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
+
+  function sortOrderByDate(orderA: Order, orderB: Order) {
+    if (orderA.date > orderB.date) return -1;
+    if (orderA.date < orderB.date) return 1;
+    return 0;
+  }
 
   useEffect(() => {
     if (!authUser) {
@@ -75,7 +81,7 @@ const Account: NextPage = () => {
           {!loadingOrders && orders.length === 0 && <p className="my-4 p-4 bg-gray-100">You haven&apos;t placed any orders yet.</p>}
           {!loadingOrders &&
             orders.length > 0 &&
-            orders.map((orderItem) => {
+            orders.sort(sortOrderByDate).map((orderItem) => {
               return <OrderHistoryItem key={orderItem.id} order={orderItem} />;
             })}
         </div>
