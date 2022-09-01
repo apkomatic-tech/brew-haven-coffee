@@ -31,13 +31,13 @@ const Layout: React.FC<ILayout> = ({ title, children }) => {
         <footer className="my-10">
           <div className="container mx-auto max-w-full px-4 lg:max-w-7xl">
             <div className="flex mb-4">
-              <a href="https://www.facebook.com" className="mr-3">
+              <a href="https://www.facebook.com" className="mr-3" aria-label="Facebook">
                 <Image src={FacebookIcon} width={35} height={35} alt="" />
               </a>
-              <a href="https://www.instagram.com" className="mr-3">
+              <a href="https://www.instagram.com" className="mr-3" aria-label="Instagram">
                 <Image src={InstagramIcon} width={35} height={35} alt="" />
               </a>
-              <a href="https://www.twitter.com">
+              <a href="https://www.twitter.com" aria-label="Twitter">
                 <Image src={TwitterIcon} width={35} height={35} alt="" />
               </a>
             </div>
