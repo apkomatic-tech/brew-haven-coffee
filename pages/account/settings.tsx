@@ -6,6 +6,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 import AuthContext from '../../state/authContext';
 import AccountNav from '../../components/account/AccountNav';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Account: NextPage = () => {
   const { authUser, signOut } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const Account: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Doge Coffee | User Dashboard</title>
+        <title>{setPageTitle('Account Settings')}</title>
       </Head>
       <div className="page-content wrapper max-w-2xl px-4">
         <AccountNav activeTab="settings" />

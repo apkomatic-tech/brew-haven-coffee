@@ -3,6 +3,7 @@ import type { GetStaticProps, NextPage } from 'next';
 import client from '../../sanityClient';
 import MenuCard from '../../components/MenuCard';
 import Head from 'next/head';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Menu: NextPage = (props: any) => {
   const drinks = props.data;
@@ -26,7 +27,7 @@ const Menu: NextPage = (props: any) => {
   return (
     <>
       <Head>
-        <title>Doge Coffee | Menu</title>
+        <title>{setPageTitle('Menu')}</title>
       </Head>
       <div className="page-content wrapper">
         <h1 className="text-3xl font-bold mb-12 pb-4 border-b">Menu</h1>

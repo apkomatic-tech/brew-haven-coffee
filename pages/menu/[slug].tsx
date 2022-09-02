@@ -1,26 +1,21 @@
 import type { NextPage, GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
-import Image, { ImageProps } from 'next/image';
-import { useRouter } from 'next/router';
-import groq from 'groq';
-import { useNextSanityImage } from 'next-sanity-image';
+import Head from 'next/head';
 import Link from 'next/link';
+import groq from 'groq';
 import { HiOutlineHome as HomeIcon } from 'react-icons/hi';
 
 import sanityClient from '../../sanityClient';
-import Head from 'next/head';
-import { useContext } from 'react';
-import CartContext from '../../state/cartContext';
-import Price from '../../components/shared/Price';
-import AuthContext from '../../state/authContext';
 import ProductDetail from '../../components/detail/ProductDetail';
+import { Product } from '../../types/Product';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const MenuDetail: NextPage = (props: any) => {
-  const product = props.data;
+  const product = props.data as Product;
 
   return (
     <>
       <Head>
-        <title>Doge Coffee | Menu - {product.name}</title>
+        <title>{setPageTitle(product.name || '')}</title>
       </Head>
       <div className="page-content container px-4 mx-auto max-w-full lg:max-w-5xl">
         {/* Breacrumbs */}

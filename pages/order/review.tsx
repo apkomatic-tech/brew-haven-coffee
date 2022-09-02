@@ -8,6 +8,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 import styles from './reviewOrder.module.css';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Order: NextPage = () => {
   const { cart, isCartLoading } = useContext(CartContext);
@@ -17,7 +18,7 @@ const Order: NextPage = () => {
     return (
       <div>
         <Head>
-          <title>Doge Coffee | Review Your Order</title>
+          <title>{setPageTitle('Order Review')}</title>
         </Head>
         <div className="page-content mx-auto max-w-4xl px-8 md:px-2 text-left">
           <SkeletonTheme baseColor="rgb(241 245 249)" duration={1.1}>

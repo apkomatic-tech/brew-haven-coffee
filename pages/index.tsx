@@ -3,11 +3,13 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import setPageTitle from '../utils/setPageTitle.utils';
+
 const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Doge Coffee | Home</title>
+        <title>{setPageTitle()}</title>
       </Head>
       <div className="px-2 pt-24 pb-24 md:pt-0 md:pb-0 flex items-center bg-mainBgColor md:min-h-[75vh]">
         <div className="container mx-auto max-w-full lg:max-w-7xl">

@@ -10,6 +10,7 @@ import { CartService } from '../../service/cart.service';
 import { Order } from '../../types/Order';
 import OrderHistoryItem from '../../components/account/OrderHistoryItem';
 import AccountNav from '../../components/account/AccountNav';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Account: NextPage = () => {
   const { authUser } = useContext(AuthContext);
@@ -32,12 +33,12 @@ const Account: NextPage = () => {
       setLoadingOrders(false);
       setOrders(orderData);
     });
-  }, []);
+  }, [authUser]);
 
   return (
     <>
       <Head>
-        <title>Doge Coffee | User Dashboard</title>
+        <title>{setPageTitle('Order History')}</title>
       </Head>
       <div className="page-content wrapper max-w-2xl px-4">
         <AccountNav activeTab="order-history" />

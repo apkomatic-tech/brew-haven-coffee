@@ -3,9 +3,11 @@ import router from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
 import React, { useContext, useEffect } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+
 import AuthContext from '../../state/authContext';
 import AuthForm from '../../components/AuthForm';
-import { FcGoogle } from 'react-icons/fc'
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Login: NextPage = () => {
   const authCtx = useContext(AuthContext);
@@ -20,7 +22,7 @@ const Login: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Doge Coffee | Login</title>
+        <title>{setPageTitle('Login')}</title>
       </Head>
       <div className="page-content wrapper-narrow">
         <h1 className="sm:text-center text-2xl font-bold mb-4">Sign In</h1>

@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { useContext, useEffect } from 'react';
 import AuthContext from '../../state/authContext';
 import AuthForm from '../../components/AuthForm';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Login: NextPage = () => {
   const authCtx = useContext(AuthContext);
@@ -19,7 +20,7 @@ const Login: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Doge Coffee | Create Account</title>
+        <title>{setPageTitle('Create Account')}</title>
       </Head>
       <div className="page-content wrapper-narrow">
         <h1 className="sm:text-center text-2xl font-bold mb-4">Create Account</h1>

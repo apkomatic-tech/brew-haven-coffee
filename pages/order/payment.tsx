@@ -9,6 +9,7 @@ import PaymentForm from '../../components/payment/PaymentForm';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import { PaymentContext } from '../../state/paymentContext';
+import setPageTitle from '../../utils/setPageTitle.utils';
 
 const Payment = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const Payment = () => {
   return (
     <>
       <Head>
-        <title>Doge Coffee | Payment</title>
+        <title>{setPageTitle('Payment')}</title>
       </Head>
       <div className="page-content wrapper">
         {!clientSecret && (
