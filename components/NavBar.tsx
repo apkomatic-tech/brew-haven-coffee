@@ -19,9 +19,8 @@ function NavBar() {
     <div className="flex p-4 items-center">
       <Link href="/" passHref>
         <a className="mr-auto">
-          <h1 className="font-bold text-xl md:text-2xl flex items-center" aria-label="Doge Coffee">
-            <Image src={Logo} alt="Doge Coffee" width={50} height={50} />
-            <span className="hidden sm:inline-block sm:ml-2">Doge Coffee</span>
+          <h1 className="font-bold text-xl md:text-2xl flex items-center gap-4" aria-label="Brew Haven Coffee">
+            <span className="hidden sm:inline-block">Brew Haven Coffee Co.</span>
           </h1>
         </a>
       </Link>

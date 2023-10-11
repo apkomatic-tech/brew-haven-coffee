@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       <div className="px-2 pt-24 pb-24 md:pt-0 md:pb-0 flex items-center bg-mainBgColor md:min-h-[75vh]">
         <div className="container mx-auto max-w-full lg:max-w-7xl">
           <h1 className="font-bold text-3xl md:text-center md:text-5xl mb-5">
-            Enjoy a delicious cup of <span className="text-primary">Doge Coffee</span>.
+            Enjoy a delicious cup of <span className="text-primary">Brew Haven Coffee</span>.
           </h1>
           <p className="text-xl mb-10 md:text-center text-black">
             Whether you want to start your day with a cup of coffee <br /> or you need a little &quot;pick me up&quot;, we got you!

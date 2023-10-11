@@ -12,7 +12,7 @@ const About: NextPage = () => {
       </Head>
       <div className="page-content wrapper-narrow">
         <h1 className="page-title mb-24 relative z-10">
-          About Doge Coffee
+          About Brew Haven Coffee
           <div className="bg-primary mt-1 h-1 w-16 rounded-sm"></div>
           <div
             className="absolute transform -translate-y-10 -translate-x-2 top-0 left-0 w-25 h-25"

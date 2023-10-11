@@ -58,7 +58,7 @@ const Order: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Doge Coffee | Review Your Order</title>
+        <title>Brew Haven Coffee | Review Your Order</title>
       </Head>
       <div className="page-content mx-auto max-w-4xl px-8 md:px-2 text-left">
         <h1 className="text-2xl font-bold text-center mb-6 pb-6 border-b border-gray-200">Review Your Order</h1>

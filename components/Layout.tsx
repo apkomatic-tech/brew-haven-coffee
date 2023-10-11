@@ -17,8 +17,8 @@ const Layout: React.FC<ILayout> = ({ title, children }) => {
   return (
     <>
       <Head>
-        <title>{(title && `${title} | Doge Coffee`) || 'Doge Coffee'}</title>
-        <meta name="description" content="Doge Coffee - a website for a fictional coffee company" />
+        <title>{(title && `${title} | Brew Haven Coffee`) || 'Brew Haven Coffee'}</title>
+        <meta name="description" content="Brew Haven Coffee - a website for a fictional coffee company" />
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="page">
@@ -41,7 +41,7 @@ const Layout: React.FC<ILayout> = ({ title, children }) => {
                 <Image src={TwitterIcon} width={35} height={35} alt="" />
               </a>
             </div>
-            <p className="text-gray-600 text-sm">&copy; {copyrightYear} Doge Coffee. All Rights Reserved</p>
+            <p className="text-gray-600 text-sm">&copy; {copyrightYear} Brew Haven Coffee. All Rights Reserved</p>
           </div>
         </footer>
       </div>
